@@ -2,6 +2,7 @@ import Nav from 'react-bootstrap/Nav';
 import { BsPerson } from 'react-icons/bs';
 
 export default function TopNav(pageName, user_id, team_id) {
+    console.debug(user_id, team_id)
     return (<Nav defaultActiveKey="/" as="ul">
         <h2>{pageName}</h2>
         {/* <Nav.Item as="li">

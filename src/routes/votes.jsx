@@ -60,8 +60,9 @@ function Votes() {
     const [selections, setSelections] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
-
+    console.debug(location.state);
     useEffect(() => {
+        
         // const controller = new AbortController();
         if (loading === false & data === null) {
             setLoading(true);
@@ -72,7 +73,7 @@ function Votes() {
                     headers: {
                         "Content-Type": "application/json",
                         "Accept": "application/json",
-                    }, body: JSON.stringify({ type: "sql", query: `select * from project.schedule_version where team_id=${location.state["id"]}` })
+                    }, body: JSON.stringify({ type: "sql", query: `select * from project.schedule_version where user_id=${(location.state) ? location.state["user_id"] : 0}` })
                     // ,
                     // signal: controller.signal
                 }

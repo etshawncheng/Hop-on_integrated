@@ -13,7 +13,7 @@ export default function Member() {
   }, [])
   return (
     <main style={{ padding: "1rem 0" }}>
-      {TopNav("Member")}
+      {TopNav("Member", location.state["user_id"], location.state["team_id"])}
       {/* -------------------------------------------------------------------------------------------------- */}
 
       {/* <div class="vh-300 d-flex justify-content-center align-items-center ">
