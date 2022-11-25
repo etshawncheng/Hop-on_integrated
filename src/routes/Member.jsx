@@ -1,16 +1,16 @@
 import './Member.css'
 import TopNav from '../components/topNav';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 export default function Member() {
   const location = useLocation();
+  const navigate = useNavigate();
   console.debug(location.state);
-  // try {
-  //   if (!Number.isInteger(state["id"])) {
-  //     throw Error("illegal id!");
-  //   }
-  // } catch (error) {
-  //   return <Navigate to="/" replace={true}/> 
-  // }
+  useEffect(() => {
+    if (!location.state) {
+      navigate("/");
+    }
+  }, [])
   return (
     <main style={{ padding: "1rem 0" }}>
       {TopNav("Member")}

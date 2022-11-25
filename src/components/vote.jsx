@@ -11,7 +11,7 @@ function Vote(props, index) {
                 <span>選項{index + 1}</span>
             </Col>
             <Col>
-                <div key={props["user_id"]}><Form.Check type='radio'  label={props["user_id"]} /></div>
+                <div key={props["user_id"]}><Form.Check type='radio' label={props["user_id"]} /></div>
             </Col>
             <Col>
                 <span>{props["user_id"]} 的行程</span>

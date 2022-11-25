@@ -3,14 +3,56 @@ import { AiOutlineSearch, AiOutlineSend, AiOutlineDown } from 'react-icons/ai'
 import Video from './assets/trip start video.mp4'
 import './Teamup.css'
 import TopNav from '../components/topNav';
-import { useState } from 'react';
-import { useEffect } from 'react';
-
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+const url = "http://localhost:5000/api"
 function Teamup() {
   const [regions, setRegions] = useState(null);
-  useEffect(()=>{
-    fetch
-  },[]);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState(null);
+  const today = new Date().toISOString().slice(0, 10);
+  const [start, setStart] = useState(today);
+  const [end, setEnd] = useState(today);
+  // const []
+  const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    // const controller = new AbortController();
+    if (loading === false & regions === null) {
+      setLoading(true);
+      console.debug('fetching');
+      fetch(url
+        , {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          }, body: JSON.stringify({ type: "sql", query: `select * from project.region` })
+          // ,
+          // signal: controller.signal
+        }
+      ).then((response) => {
+        if (response.status !== 200) throw Error('http failed!');
+        return response.text();
+      }).then((raw) => {
+        // console.debug(raw);
+        if (!raw) throw Error('no data!');
+        const parsed = JSON.parse(raw);
+        // console.debug(parsed);
+        if (!parsed) throw Error('wrong data format!');
+        setRegions(parsed["data"]);
+        setErr(null);
+      }).catch((reason) => {
+        console.error(reason);
+        setErr(reason);
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
+    // return () => {
+    //     controller.abort();
+    // }
+  }, [loading, regions, err, start, end]);
   return (
     <main style={{ padding: "1rem 0" }}>
       {TopNav("Team up")}
@@ -24,43 +66,38 @@ function Teamup() {
               <div class="mb-3">
                 <h1 for="exampleInputPassword1" class="form-label">Choose destination (city)</h1>
                 <div>
-                  <select className="form">
-                    <option value="1">花蓮</option>
-                    <option value="1">臺北</option>
-                    <option value="1">臺中</option>
-                    <option value="1">臺東</option>
-                    <option value="1">臺南</option>
-                    <option value="1">高雄</option>
-                  </select>
+                  {regions.map(x =>
+                    <div>
+                      <input className="" id={x["REGION_ID"]} type="checkbox" value={x["REGION_ID"]} /><label className="">{x["FIRST_DISTRICT_NAME"]}</label>
+                    </div>)}
                 </div>
               </div>
               <h1 for="start">Start date:</h1>
-              <input type="date" id="start" name="trip-start" value="2022-11-14">
-
-              </input>
-
+              <input type="date" id="start" name="trip-start" value={start}
+                onChange={e => {
+                  setStart(document.getElementById("start").value)
+                }}
+              />
               <h1 for="start">End date:</h1>
-              <input type="date" id="end" name="trip-end" value="2022-11-14">
-              </input>
+              <input type="date" id="end" name="trip-end" value={end}
+                onChange={e => {
+                  setEnd(document.getElementById("end").value)
+                }}
+              />
               <div>
-                <h1 for="tentacles">Number of guests :</h1>
-                <input type="number" id="tentacles" name="tentacles" min="1" max="100">
+                <h1>Number of guests :</h1>
+                <input type="number" id="account" min="1" max="10" defaultValue="2">
                 </input>
-                {/* q */}
-
               </div>
-              <h1 for="tentacles">Are you ready?</h1>
+              <h1>Are you ready?</h1>
               <div>
-
               </div>
-
               <div>
                 <div class="mb-3">
                   {/* <button class="btn btn-primary" href="#home" type="submit" onclick="myFunction()">Team up</button>    */}
                   <a href="#Send" class="btn btn-primary" type="submit" >Team up</a>
                 </div>
               </div>
-
             </div>
           </div>
         </center>

@@ -2,9 +2,8 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Vote from '../components/vote';
-import { Navigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import TopNav from '../components/topNav';
 
 const url = 'http://localhost:5000/api';
@@ -59,7 +58,8 @@ function Votes() {
     const [radio, setRadio] = useState(null);
     // const [btnType, setBtnType] = useState('radio');
     const [selections, setSelections] = useState(null);
-
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         // const controller = new AbortController();
@@ -72,7 +72,7 @@ function Votes() {
                     headers: {
                         "Content-Type": "application/json",
                         "Accept": "application/json",
-                    }, body: JSON.stringify({ type: "sql", query: "select * from project.schedule_version where team_id = 1" })
+                    }, body: JSON.stringify({ type: "sql", query: `select * from project.schedule_version where team_id=${location.state["id"]}` })
                     // ,
                     // signal: controller.signal
                 }
@@ -92,6 +92,7 @@ function Votes() {
             }).catch((reason) => {
                 console.error(reason);
                 setErr(reason);
+                // navigate("");
             }).finally(() => {
                 setLoading(false);
             });

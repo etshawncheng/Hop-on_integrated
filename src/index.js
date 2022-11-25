@@ -14,27 +14,19 @@ import Schedule from './routes/Schedule';
 import Tinder from './routes/Tinder';
 import Login from './routes/Login';
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-
   <BrowserRouter>
-
     <Routes>
-
       <Route path="/" element={<Login />} />
       <Route path="Home" element={<Home />} />
       <Route path="Teamup" element={<Teamup />} />
       <Route path="Votes" element={<Votes />} />
       <Route path="views" element={<Views />} />
       <Route path="Schedule" element={<Schedule />} />
-      <Route path="Member" element={<Member />} />
+      <Route path="Member" element={<Member/>} />
       <Route path="Tinder" element={<Tinder />} />
-
-
     </Routes>
-
-
   </BrowserRouter>
 );
 

@@ -38,15 +38,14 @@ function Login() {
   useEffect(() => {
     if (id) {
       if (id != -1) {
-        navigate("/Member", { state: { id: id } });
-      }else{
+        navigate("/Member", { state: { user_id: id, team_id: null} });
+      } else {
         alert("wrong account or password!")
       }
     }
   }, [id]);
   return (
     <main style={{ padding: "1rem 0" }}>
-      {/* {TopNav("Login")} */}
       <div className="vh-100 d-flex justify-content-center align-items-center ">
         <div className="col-md-5 p-5 shadow-sm border rounded-5 border-primary bg-white">
           <h2 className="text-center mb-4 text-primary">Login Form</h2>
