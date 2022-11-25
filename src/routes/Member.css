@@ -1,0 +1,15 @@
+.container {
+    /* overflow:hidden; */
+    list-style:none;
+    display: flex;
+}
+
+.container li {
+    float:center;
+    text-align:center;
+    margin:0.3em;
+}
+
+.container img {
+    display:block;
+}

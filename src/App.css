@@ -1,0 +1,55 @@
+.header {
+  text-align: center;
+  color: rgb(12, 11, 11);
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 1rem;
+  z-index: 2;
+  font-size:20px;
+
+  margin-top:20px;
+
+}
+
+.logo{
+  align-self: flex-end;
+
+}
+
+
+
+li {
+  padding: 0 1rem;
+
+}
+
+.icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+
+nav{ 
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+
+.navitem{
+display: flex;
+flex-direction: column;
+align-items: center;
+position: relative;
+}
+
+.navitem:hover{
+top: -8px;
+} 
+
