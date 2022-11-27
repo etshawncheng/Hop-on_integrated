@@ -58,22 +58,8 @@ app.post('/api', function (req, res) {
       break;
     }
     default: {
-      // var dataToSend = null;
-      // // spawn new child process to call the python script
-      // const python = spawn('python', ["test.py"]);
-      // // collect data from script
-      // python.stdout.on('data', function (data) {
-      //   console.debug('Pipe data from python script ...');
-      //   dataToSend = data.toString();
-      //   console.debug(dataToSend);
-      // });
-      // // in close event we are sure that stream from child process is closed
-      // python.on('close', (code) => {
-      //   console.debug(`child process close all stdio with code ${code}`);
-      //   // send data to browser
-      //   var data = { data: dataToSend };
-      //   res.send(data);
-      // });
+      console.debug("not qualified request");
+      console.debug(req.body);
       break;
     }
   }
