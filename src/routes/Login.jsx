@@ -1,6 +1,7 @@
 import TopNav from '../components/topNav';
 import React, { useState, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 const url = 'http://localhost:5000/api';
 function submit(e, setId) {
   e.preventDefault();
@@ -35,10 +36,12 @@ function submit(e, setId) {
 function Login() {
   const [id, setId] = useState(null);
   const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
   useEffect(() => {
     if (id) {
       if (id != -1) {
-        navigate("/Member", { state: { user_id: id, team_id: null} });
+        setCookie("user_id", id, {path:"/", maxAge:24*60*60});
+        navigate("/Member");
       } else {
         alert("wrong account or password!")
       }
@@ -51,11 +54,11 @@ function Login() {
           <h2 className="text-center mb-4 text-primary">Login Form</h2>
           <form onSubmit={e => submit(e, setId)}>
             <div className="mb-3">
-              <label for="exampleInputEmail1" className="form-label">Email address</label>
+              <label className="form-label">Email address</label>
               <input type="text" className="form-control border border-primary" id="account" aria-describedby="emailHelp"></input>
             </div>
             <div className="mb-3">
-              <label for="exampleInputPassword1" className="form-label">Password</label>
+              <label className="form-label">Password</label>
               <input type="password" className="form-control border border-primary" id="password"></input>
             </div>
             <p className="small"><a className="text-primary" href="forget-password.html">Forgot password?</a></p>

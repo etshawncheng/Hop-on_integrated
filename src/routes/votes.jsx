@@ -126,7 +126,7 @@ function Votes() {
     } else if (err) {
         return (<h1>error</h1>);
 
-        return <Navigate to="/error" state={err} />
+        // return <Navigate to="/error" state={err} />
     } else {
         return (<h1>error</h1>);
     }
