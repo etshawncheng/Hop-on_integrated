@@ -1,13 +1,10 @@
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import Vote from '../components/vote';
 import { useNavigate, useLocation } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import TopNav from '../components/topNav';
-
-const url = 'http://localhost:5000/api';
-function submitVote(e, data, setData, setErr) {
+import { useCookies } from 'react-cookie';
+import url from '../url';
+function submitVote(e, data, setData, setErr, cookies) {
     e.preventDefault();
     fetch(url
         , {
@@ -15,7 +12,7 @@ function submitVote(e, data, setData, setErr) {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-            }, body: JSON.stringify({ type: "sql", query: "select * from project.schedule_version where team_id = 1" })
+            }, body: JSON.stringify({ type: "sql", query: `select * from project.schedule_version where team_id = 1 and user_id=${cookies["user_id"]}` })
             // ,
             // signal: controller.signal
         }).then((response) => {
@@ -60,9 +57,9 @@ function Votes() {
     const [selections, setSelections] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
-    console.debug(location.state);
+    const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
     useEffect(() => {
-        
+        console.debug(cookies);
         // const controller = new AbortController();
         if (loading === false & data === null) {
             setLoading(true);
@@ -73,7 +70,7 @@ function Votes() {
                     headers: {
                         "Content-Type": "application/json",
                         "Accept": "application/json",
-                    }, body: JSON.stringify({ type: "sql", query: `select * from project.schedule_version where user_id=${(location.state) ? location.state["user_id"] : 0}` })
+                    }, body: JSON.stringify({ type: "sql", query: `select * from project.schedule_version where user_id=${cookies["user_id"]}` })
                     // ,
                     // signal: controller.signal
                 }
@@ -101,7 +98,7 @@ function Votes() {
         // return () => {
         //     controller.abort();
         // }
-    }, [loading, data, err, selections, radio]);
+    }, [loading, data, err, selections, radio, cookies]);
     // console.debug(err === null & loading === false & data !== null);
     if (err === null & loading === false & data !== null) {
         // console.debug(selections);
@@ -113,11 +110,11 @@ function Votes() {
                         <label>team_id: {data[0]["team_id"]}</label>
                     </div>
                 </div>
-                <form onSubmit={(e) => submitVote(e, data, setData, setErr)}>
+                <form onSubmit={(e) => submitVote(e, data, setData, setErr, cookies)}>
                     {data.map((x, i) => Vote(x, i, setSelections, selections, radio, setRadio))}
                     <div className="row p-3 border bg-light justify-content-md-center">
                         <div className="col-sm-8">
-                            <button type="submit" className="btn btn-primary" value="送出表單">Submit</button>
+                            <button type="submit" className="btn btn-primary">送出</button>
                         </div>
                     </div>
                 </form>

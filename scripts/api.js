@@ -1,6 +1,6 @@
-const config = require('./config.json');
+const config = require('../config.json');
 var express = require('express');
-var router = express();
+var router = express.Router();
 var cors = require('cors');
 const mysql = require("mysql2");
 const { spawn } = require('child_process');
@@ -39,7 +39,7 @@ router.post('/api', function (req, res) {
       var dataToSend = null;
       // spawn new child process to call the python script
       const argv = req.body["query"].map(x => x);
-      argv[0] = "./scripts/" + argv[0]
+      // argv[0] = "./scripts/" + argv[0]
       console.debug(argv);
       const python = spawn('python', argv);
       // collect data from script
@@ -97,4 +97,4 @@ router.get('/api', function (req, res) {
     connection.end();
   }
 });
-router.listen(port);
+module.exports = router;

@@ -1,23 +1,47 @@
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
-function Vote(props, index) {
-    // console.log(props);
+
+function Travel_Schedule(shouldExsit) {
+    return (shouldExsit)
+        ? <div className="col-8">
+            <div>
+                <label>
+                    travel schedule
+                </label>
+            </div>
+        </div>
+        : null
+}
+function Vote(data, i, setSelections, selections, radio, setRadio) {
+    console.debug(data);
     return (
-        <Row>
-            <Col>
-                <span>選項{index + 1}</span>
-            </Col>
-            <Col>
-                <div key={props["user_id"]}><Form.Check type='radio' label={props["user_id"]} /></div>
-            </Col>
-            <Col>
-                <span>{props["user_id"]} 的行程</span>
-            </Col>
-            <Col><Button>查看行程:</Button></Col>
-        </Row>
-    )
+        <div className="row p-3 border bg-light justify-content-md-center" key={data["user_id"]}>
+            <div className="col-sm-2">
+                <div className="form-radio">
+                    <input className="form-radio-input" type="radio" value={data["user_id"]}
+                        checked={data["user_id"] == radio}
+                        onChange={(e) => { setRadio(data["user_id"]); }}
+                    />
+                    <label>選項 {i + 1}</label>
+                </div>
+            </div>
+            <div className="col-sm-4">
+                <div className="form-check form-switch">
+                    <input className="form-check-input" type="checkbox" checked={selections.get(data["user_id"]) === false}
+                        onChange={(e) => {
+                            const map = new Map(selections);
+                            map.set(data["user_id"], !selections.get(data["user_id"]));
+                            setSelections(map);
+                        }}
+                    />
+                    <label className="form-check-label"> Show travel schedule </label>
+                </div>
+            </div>
+            {Travel_Schedule(selections.get(data["user_id"]))}
+        </div>
+    );
 }
 export default Vote

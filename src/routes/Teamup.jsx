@@ -1,29 +1,78 @@
-import { AiOutlineSearch, AiOutlineSend, AiOutlineDown } from 'react-icons/ai'
 import Video from './assets/trip start video.mp4'
 import './Teamup.css'
 import TopNav from '../components/topNav';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import e from 'cors';
-const url = "http://localhost:5000/api"
+import { useCookies } from 'react-cookie';
+import url from '../url';
 function addGuest(e, guestList, setGuestList) {
   const L = guestList.map(x => x);
-  L.push("email:");
+  L.push("");
   console.debug(L);
   setGuestList(L);
 }
 function Guest(value, i, guestList, setGuestList) {
   return <>
-    <input type="text" value={value}
+    <input type="email" placeholder='email:' value={value}
       onChange={e => {
         const L = guestList.map(x => x);
         L[i] = e.target.value;
         setGuestList(L);
       }}
-    /><button type="button" onClick={e => {
-      guestList.length != 1 ? setGuestList(guestList.splice(i, 1)) : setGuestList([])
+    /><button type="button" className='btn btn-primary' onClick={e => {
+      guestList.length !== 1 ? setGuestList(guestList.splice(i, 1)) : setGuestList([])
     }}>remove</button>
   </>
+}
+function submit(e, cookies) {
+  e.preventDefault();
+  // console.debug(e.target);
+  // return;
+  const region = [];
+  const grouper_id = cookies["user_id"];
+  let start_date = null;
+  let period = null;
+  let people_count = 0;
+  const join_url = `concat(last_insert_id(),${grouper_id})`;
+  for (let i = 0; i < e.target.length; i++) {
+    switch (e.target[i].type) {
+      case "checkbox": {
+        if (e.target[i].checked) {
+          region.push(e.target[i].value);
+        }
+        break;
+      }
+      case "date": {
+        if (e.target[i].id === "start") {
+          start_date = e.target[i].value;
+        } else if (e.target[i].id === "end") {
+          period = (new Date(e.target[i].value) - new Date(start_date)) / (1000 * 60 * 60 * 24);
+          if (period < 1) {
+            alert("not valid start date or end date!");
+            return;
+          }
+        }
+        break;
+      }
+      case "email": {
+        people_count += 1;
+        break;
+      }
+      default: {
+        console.debug(e.target[0].value);
+        break;
+      }
+    }
+  }
+  const region_list = region.join(" ");
+  if (!region_list) {
+    alert("must select at least one region!");
+    return;
+  }
+  const q = `INSERT INTO project.team(region_list,start_date,period,people_count,join_url,set_time,grouper_id,teammate_list)VALUES("${region_list}","${start_date}",${period},${people_count},${join_url},now(),${grouper_id},"[]")`;
+  console.debug(q);
+  return;
+  // fetch
 }
 function Teamup() {
   const [regions, setRegions] = useState(null);
@@ -33,11 +82,11 @@ function Teamup() {
   const [start, setStart] = useState(today);
   const [end, setEnd] = useState(today);
   const [guestList, setGuestList] = useState([]);
+  const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
   const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
     // const controller = new AbortController();
-    console.debug(guestList);
     if (loading === false & regions === null) {
       setLoading(true);
       console.debug('fetching');
@@ -82,13 +131,13 @@ function Teamup() {
         </video>
         <center>
           <div className="content">
-            <div name='book' className='search'>
-              <div class="mb-3">
-                <h1 class="form-label">Choose destination (city)</h1>
+            <form onSubmit={e => { submit(e, cookies) }}>
+              <div className="mb-3">
+                <h1 className="form-label">Choose destination (city)</h1>
                 <div>
                   {regions ? regions.map(x =>
                     <div>
-                      <input className="" id={x["REGION_ID"]} type="checkbox" value={x["REGION_ID"]} /><label className="">{x["FIRST_DISTRICT_NAME"]}</label>
+                      <input className="region" key={x["REGION_ID"]} type="checkbox" value={x["REGION_ID"]} /><label className="">{x["FIRST_DISTRICT_NAME"]}</label>
                     </div>) : null}
                 </div>
               </div>
@@ -124,12 +173,11 @@ function Teamup() {
               <div>
               </div>
               <div>
-                <div class="mb-3">
-                  {/* <button class="btn btn-primary" href="#home" type="submit" onclick="myFunction()">Team up</button>    */}
-                  <input class="btn btn-primary" type="submit" value="Team up"/>
+                <div className="mb-3">
+                  <input className="btn btn-primary" type="submit" />
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </center>
       </div>

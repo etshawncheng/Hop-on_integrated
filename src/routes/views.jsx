@@ -1,5 +1,4 @@
 import Nav from 'react-bootstrap/Nav';
-import { BsPerson } from 'react-icons/bs';
 import Taipei from './assets/taipei-101.jpg'
 import Taichung from './assets/taichung.jpg'
 import Taitung from './assets/taitung.jpg'
@@ -8,28 +7,62 @@ import Hualien from './assets/hualien.jpg'
 import Kaohsiung from './assets/koahsuing.jpg'
 import './views.css'
 import TopNav from '../components/topNav';
+import React, { useState, useEffect } from 'react';
 //////////////////////////////////////////////////////////////////////////上面 JS 
+import url from '../url';
+function SearchOptions(data) {
+  return (<>
+    <div>名稱：{data["attraction_name"]}</div>
+    <div>電話：{data["attraction_phone"]}</div>
+    <div>地址：{data["attraction_loc"]}</div>
+    <div>簡介：{data["attraction_desc_path"]}</div>
+  </>)
+}
+function fetchSpot(e, searchKey, setsearchResults) {
+  e.preventDefault();
+  console.debug(e);
+  const value = document.getElementById("spot-name").value;
+  if ('' == value) {
+    console.debug("illegal empty search key");
+    return;
+  }
+  fetch(url
+    , {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      }, body: JSON.stringify({ type: "sql", query: `select * from project.attraction where attraction_name like '%${searchKey}%';` })
+      // ,
+      // signal: controller.signal
+    }
+  ).then((response) => {
+    if (response.status !== 200) throw Error('http failed!');
+    return response.text();
+  }).then((raw) => {
+    // console.debug(raw);
+    if (!raw) throw Error('no data!');
+    const parsed = JSON.parse(raw);
+    console.debug(parsed);
+    if (!parsed) throw Error('wrong data format!');
+    setsearchResults(parsed["data"]);
+  }).catch((reason) => {
+    console.error(reason);
+  }).finally(() => {
+  });
+}
 
-export default function Views() {
+function Views() {
+  const [searchKey, setSearchKey] = useState("");
+  const [searchResults, setsearchResults] = useState(null);
+  useEffect(() => {
+    console.debug(searchResults);
+  }, [searchKey, searchResults])
+
   return (
     <main style={{ padding: "1rem 0" }}>
       {TopNav("Teamup")}
-
-      {/* <div name='views' className='selects'>
-            <div className='container'>
-                <img bgImg={Taipei} text='Taipei' />
-                <img bgImg={Taichung} text='Taichung' />
-                <img bgImg={Taitung} text='Taitung' />
-                <img bgImg={Tainan} text='Tainan' />
-                <img bgImg={Hualien} text='Hualien' />
-                <img bgImg={Kaohsiung} text='Kaohsiung' />
-            </div>
-        </div> */}
-
-      {/*--------------------------------------------------------------------------------  */}
-
-
-      <div class="container1">
+      <div className="container1">
         <h3 >Taipei</h3>
         <h3 >l</h3>
         <h3 >Taichung</h3>
@@ -41,83 +74,39 @@ export default function Views() {
         <h3 >Hualien</h3>
         <h3 >l</h3>
         <h3 >Kaohsiung</h3>
-
-
-
       </div>
-
-      {/* --------------------------- */}
-      <div class="container">
+      <div className="input-group mb-3">
+        <span className="form-control">搜尋景點</span>
+        <input className="form-control" type="text" placeholder="輸入景點名稱" id="spot-name" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
+        <button type="button" className='btn btn-outline-dark btn-sm' value="search"
+          onClick={(e) => { fetchSpot(e, searchKey, setsearchResults) }}>搜尋</button>
+      </div>
+      <div className="container">
 
         <img src={Taipei} text="Taipei" ></img>
-        {/* <h3 class="centered"/>Taipei */}
+        {/* <h3 className="centered"/>Taipei */}
 
         <img src={Taichung} text="Taichung" ></img>
-        {/* <h3 class="centered"/>Taichung */}
+        {/* <h3 className="centered"/>Taichung */}
 
         <img src={Taitung} text="Taitung"></img>
         <img src={Tainan} text="Tainan"></img>
         <img src={Hualien} text="Hualien"></img>
         <img src={Kaohsiung} text="Kaohsiung"></img>
-
-
-
-        {/* <div class="bottom-left">Bottom Left</div>
-  <div class="top-left">Top Left</div>
-  <div class="top-right">Top Right</div>
-  <div class="bottom-right">Bottom Right</div>
-  <div class="centered">Centered</div> */}
-
       </div>
-
-
-
-      {/*--------------------------------------------------------------------------------  */}
-      {/* <div class="gallery">
-  <a target="_blank" href="C:\Users\user\Downloads\hop-on-master\hop-on-master\client-side\src\routes\assets\taipei-101.jpg">
-    <img src="C:\Users\user\Downloads\hop-on-master\hop-on-master\client-side\src\routes\assets\taipei-101.jpg" alt="Taipei" width="600" height="400"></img>
-  </a>
-  <div class="desc">Taipei</div>
-</div>
-
-<div class="gallery">
-  <a target="_blank" href="img_forest.jpg">
-    <img src="img_forest.jpg" alt="Forest" width="600" height="400"></img>
-  </a>
-  <div class="desc">Add a description of the image here</div>
-</div>
-
-<div class="gallery">
-  <a target="_blank" href="img_lights.jpg">
-    <img src="img_lights.jpg" alt="Northern Lights" width="600" height="400"></img>
-  </a>
-  <div class="desc">Add a description of the image here</div>
-</div>
-
-<div class="gallery">
-  <a target="_blank" href="img_mountains.jpg">
-    <img src="img_mountains.jpg" alt="Mountains" width="600" height="400"></img>
-  </a>
-  <div class="desc">Add a description of the image here</div>
-</div> */}
-
-      {/* -------------------------------------------------------------------------------- */}
-
-      <div class="full-page" id="tinder">tinder
-
-
-
-        <div class="d-grid">
-          <button class="btn btn-primary" type="submit" href="/Tinder">
+      <div className="" name="results" id="results">
+        {(searchResults) ? <>
+          {searchResults.map(x => SearchOptions(x))}
+        </> : null}
+      </div>
+      <div className="full-page" id="tinder">tinder
+        <div className="d-grid">
+          <button className="btn btn-primary" type="submit" href="/Tinder">
             <Nav.Link href="/Tinder">Tinder card</Nav.Link>
           </button>
         </div>
-
-
-
       </div>
-
-
     </main>
   );
-}
+};
+export default Views;

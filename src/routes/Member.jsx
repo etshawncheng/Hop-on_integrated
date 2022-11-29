@@ -3,7 +3,7 @@ import TopNav from '../components/topNav';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useCookies } from 'react-cookie';
-export default function Member() {
+function Member() {
   const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
@@ -141,4 +141,5 @@ export default function Member() {
     </main>
 
   );
-}
+};
+export default Member;

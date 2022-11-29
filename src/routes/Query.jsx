@@ -1,10 +1,10 @@
 import Vote from '../components/vote';
-import { Navigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import React from 'react';
 import TopNav from '../components/topNav';
 import SpotList from '../components/spotList';
-const url = 'http://localhost:5000/api';
+import url from '../url';
 function submitQuery(e) {
     e.preventDefault();
     console.debug(e.target);
@@ -97,7 +97,7 @@ function Queries() {
     }, [searchKey, searchResults, prefered, preferedList, unpreferedList])
     return (
         <main style={{ padding: "1rem 0" }}>
-            {/* {TopNav("Query")} */}
+            {TopNav("Query")}
 
             <form onSubmit={(e) => { submitQuery(e) }}>
                 <p>偏好的旅遊類型？(可複選)</p>
@@ -135,7 +135,6 @@ function Queries() {
                     <input className="form-control" type="text" placeholder="輸入景點名稱" id="spot-name" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
                     <button type="button" className='btn btn-primary' value="search"
                         onClick={(e) => { fetchSpot(e, searchKey, setsearchResults) }}>搜尋</button>
-
                 </div>
                 <div className="input-group mb-3">
                     <span className="form-control">搜尋結果</span>

@@ -2,7 +2,8 @@ import TopNav from '../components/topNav';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-const url = 'http://localhost:5000/api';
+import url from '../url';
+
 function submit(e, setId) {
   e.preventDefault();
   const account = document.getElementById("account").value;
@@ -26,7 +27,6 @@ function submit(e, setId) {
       const parsed = JSON.parse(raw);
       if (!parsed) throw Error('wrong data format!');
       console.debug(parsed["data"]);
-
       setId(parsed["data"]);
     }).catch((reason) => {
       console.error(reason);
@@ -38,6 +38,7 @@ function Login() {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
   useEffect(() => {
+    console.debug(id);
     if (id) {
       if (id != -1) {
         setCookie("user_id", id, {path:"/", maxAge:24*60*60});
