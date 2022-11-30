@@ -8,16 +8,21 @@ import { CSS } from "@dnd-kit/utilities";
 import { removeView} from "../reducers/routePlanSlice";
 import { useDispatch } from 'react-redux';
 
-export default function View({ routePlan, id, viewId, name, listId }) {
+export default function View({ id, viewId, name, listId }) {
     const [isOver, setIsOver] = useState(false);
     const [editState, setEditState] = useState(false);
     const dispatch = useDispatch();
     const targetRef = useRef(null);
-    const { setNodeRef, listeners, transform, transition } = useSortable({ id })
+    const { setNodeRef, listeners, transform, transition } = useSortable({ id });
+    const letter = String.fromCharCode(viewId + 'A'.charCodeAt(0));
+
     const styles = {
         marginTop: "10px",
         transform: CSS.Translate.toString(transform),
         transition,
+        fontSize:'24px',
+        fontFamily:'微軟正黑體',
+        color:'white'
     }
 
     function handleClickDelete(){
@@ -46,7 +51,7 @@ export default function View({ routePlan, id, viewId, name, listId }) {
                 onMouseLeave={handleOnLeave}
                 ref={targetRef}
             >
-                {name}
+                {letter + '.  '+ name}
                 {isOver && (
                     <Button className="edit-button m-1" size="sm" onClick={handleClickEdit}>
                         <FontAwesomeIcon icon={faPencilAlt} />

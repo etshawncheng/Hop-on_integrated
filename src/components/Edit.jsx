@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 import { updateView } from "../reducers/routePlanSlice";
 import { useDispatch} from "react-redux";
 
-export default function Edit({ routePlan, viewId, editState, setEditState, listId }) {
+export default function Edit({ viewId, editState, setEditState, listId }) {
     const styles = {
         position: "relative",
         margin: 0,
@@ -25,7 +25,7 @@ export default function Edit({ routePlan, viewId, editState, setEditState, listI
     function handleUpdateView(e) {
         if (e.target.value.trim()) {
             // toggleRouteStatus(editState.listId);
-            dispatch(updateView(listId, viewId, e.target.value));
+            dispatch(updateView({listId, viewId, name:e.target.value}));
         }
         e.target.value = "";
         toggleEditShow();
@@ -43,7 +43,6 @@ export default function Edit({ routePlan, viewId, editState, setEditState, listI
                     onBlur={toggleEditShow}
                     onClick={(e) => {
                         e.stopPropagation();
-                        console.log(editRef.current.getBoundingClientRect());
                     }}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {

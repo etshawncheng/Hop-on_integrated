@@ -41,7 +41,7 @@ router.post('/api', function (req, res) {
       const argv = req.body["query"].map(x => x);
       // argv[0] = "./scripts/" + argv[0]
       console.debug(argv);
-      const python = spawn('python', argv);
+      const python = spawn('python_env/Scripts/python', argv);
       // collect data from script
       python.stdout.on('data', function (data) {
         console.debug('Pipe data from python script ...');

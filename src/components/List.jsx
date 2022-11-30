@@ -8,12 +8,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRoute } from '@fortawesome/free-solid-svg-icons';
 import { DndContext, useSensor, useSensors, PointerSensor, closestCenter } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
-import { useDispatch} from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { exchangeViewsOrder } from "../reducers/routePlanSlice";
 
 
 export default function List({ title, list, listId }) {
-
+    const response = useSelector((state) => state.mapSetting.results);
     const [showNew, updateShowNew] = useState(false);
     const dispatch = useDispatch();
     const sensors = useSensors(useSensor(PointerSensor, {
@@ -57,14 +57,15 @@ export default function List({ title, list, listId }) {
             <div style={{verticalAlign:'middle', lineHeight: '38px', width:'90%'}}>
                 {!showNew && (
                     <div className="footer pt-2  d-flex" style={{position:'relative',float: 'left',width:'40%', height:'50px', margin:'1px 10px 1px 15px'}} >
-                        <Button style={{position:'relative', width:'100%', height:'40px',top: '15px'}}
+                        <Button variant="primary" style={{position:'relative', width:'100%', height:'40px',top: '15px'}}
                             className="py-1 flex-grow-1 text-left"
                             onClick={toggleShowNew}
                         >新增景點</Button>
                     </div>)}
                 <div style={{position:'relative', float: 'left',width:'120px',height:'50px',margin:'1px 5px 1px 0px'}}>
                     <Button variant="primary" onClick={handleShow} style={{position:'relative', width:'100%', top: '22px', height:'40px'}}>
-                        <FontAwesomeIcon icon={faRoute} />路線資訊
+                        {/* <FontAwesomeIcon icon={faRoute} /> */}
+                        路線資訊
                     </Button></div>
             </div>
             <Offcanvas key={listId} show={showRoute} onHide={handleClose} style={{fontFamily:'微軟正黑體'}}>
@@ -72,7 +73,7 @@ export default function List({ title, list, listId }) {
                     <Offcanvas.Title>路線資訊</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    {list.response != null && list.response.routes[0].legs.map((leg, index) =>
+                    {response != null && response.routes[0].legs.map((leg, index) =>
                         <div className="routePanel">
                             <Card style={{ width: '18rem' }} key={index}>
                                 <Card.Body>
