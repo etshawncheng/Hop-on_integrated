@@ -107,11 +107,11 @@ function Votes() {
                 {TopNav("Votes")}
                 <div className="row p-3 border bg-light justify-content-md-center">
                     <div className="col-sm-8">
-                        <label>team_id: {data[0]["team_id"]}</label>
+                        <label>隊伍1</label>
                     </div>
                 </div>
                 <form onSubmit={(e) => submitVote(e, data, setData, setErr, cookies)}>
-                    {data.map((x, i) => Vote(x, i, setSelections, selections, radio, setRadio))}
+                    {[{user_id: 0, travel_schedule:""}, {user_id: 1, travel_schedule:""}].map((x, i) => Vote(x, i, setSelections, selections, radio, setRadio))}
                     <div className="row p-3 border bg-light justify-content-md-center">
                         <div className="col-sm-8">
                             <button type="submit" className="btn btn-primary">送出</button>

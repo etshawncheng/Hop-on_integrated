@@ -4,12 +4,12 @@ import Button from 'react-bootstrap/Button';
 import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 
-function Travel_Schedule(shouldExsit) {
-    return (shouldExsit)
+function Travel_Schedule(shouldExsit, data) {
+    return (shouldExsit, data)
         ? <div className="col-8">
             <div>
                 <label>
-                    travel schedule
+                    {data["travel_schedule"]}
                 </label>
             </div>
         </div>
@@ -30,17 +30,17 @@ function Vote(data, i, setSelections, selections, radio, setRadio) {
             </div>
             <div className="col-sm-4">
                 <div className="form-check form-switch">
-                    <input className="form-check-input" type="checkbox" checked={selections.get(data["user_id"]) === false}
+                    <input className="form-check-input" type="checkbox" checked={selections.get(data["user_id"])}
                         onChange={(e) => {
                             const map = new Map(selections);
                             map.set(data["user_id"], !selections.get(data["user_id"]));
                             setSelections(map);
                         }}
                     />
-                    <label className="form-check-label"> Show travel schedule </label>
+                    <label className="form-check-label"> {selections.get(data["user_id"]) ? "顯示" : "關閉"}旅程規劃 </label>
                 </div>
             </div>
-            {Travel_Schedule(selections.get(data["user_id"]))}
+            {Travel_Schedule(selections.get(data["user_id"], data))}
         </div>
     );
 }

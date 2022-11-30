@@ -137,7 +137,7 @@ function Teamup() {
                 <div>
                   {regions ? regions.map(x =>
                     <div>
-                      <input className="region" key={x["REGION_ID"]} type="checkbox" value={x["REGION_ID"]} /><label className="">{x["FIRST_DISTRICT_NAME"]}</label>
+                      <input className="region"checked="true" key={x["REGION_ID"]} type="checkbox" value={x["REGION_ID"]} /><label className="">{x["FIRST_DISTRICT_NAME"]}</label>
                     </div>) : null}
                 </div>
               </div>
@@ -145,10 +145,12 @@ function Teamup() {
               <input type="date" id="start" name="trip-start" value={start}
                 onChange={e => {
                   const value = document.getElementById("start").value;
-                  if (value < end) { setStart(value) }
-                  else {
+                  // if (value < end) {
+                     setStart(value) 
+                  //   }
+                  // else {
                     // alert()
-                  }
+                  // }
                 }}
               />
               <h1>End date:</h1>

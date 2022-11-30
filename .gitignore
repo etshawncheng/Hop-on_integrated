@@ -7,7 +7,7 @@ config.json
 /node_modules
 /.pnp
 .pnp.js
-
+/python_env
 # testing
 /coverage
 

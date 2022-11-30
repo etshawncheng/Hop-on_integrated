@@ -5,9 +5,39 @@ import React from 'react';
 import TopNav from '../components/topNav';
 import SpotList from '../components/spotList';
 import url from '../url';
-function submitQuery(e) {
+function submitQuery(e, cookies) {
     e.preventDefault();
-    console.debug(e.target);
+    // console.debug(e.target);
+    // return;
+    const spot = [];
+    const team_id = cookies["team_id"];
+    const user_id = cookies["user_id"];
+    let spot_per_day = null;
+    const liked_spot_list = [];
+    const spot_type = null;
+    for (let i = 0; i < e.target.length; i++) {
+        switch (e.target[i].type) {
+            case "checkbox": {
+                if (e.target[i].checked) {
+                }
+                break;
+            }
+            case "date": {
+                break;
+            }
+            case "email": {
+                break;
+            }
+            default: {
+                console.debug(e.target[0].value);
+                break;
+            }
+        }
+    }
+    const q = `INSERT INTO project.comprehensive_inquiry(team_id,user_id,spot_type,spot_per_day,liked_spot_list)VALUES(${team_id},${user_id},${spot_type},${spot_per_day},${liked_spot_list})`;
+    console.debug(q);
+    return;
+    // fetch
 }
 function SearchOptions(data) {
     return <option key={data["attraction_id"]} value={data["attraction_id"]}>{data["attraction_name"]}</option>
@@ -96,37 +126,27 @@ function Queries() {
 
     }, [searchKey, searchResults, prefered, preferedList, unpreferedList])
     return (
-        <main style={{ padding: "1rem 0" }}>
+        <main style={{
+            padding: "1rem 0"
+            // , overflow: "scroll"
+        }}>
             {TopNav("Query")}
 
             <form onSubmit={(e) => { submitQuery(e) }}>
                 <p>偏好的旅遊類型？(可複選)</p>
                 <div className="input-group mb-3">
                     <div className="input-group-text bg-white flex-fill flex-column">
-                        <div className="input-group">
-                            <div className="input-group-text bg-white">
-                                <input className="form-check-input mt-0" id="userNeed1-1" type="checkbox" name="userNeed1" value="線上教學方法" />
-                            </div>
-                            <label className="input-group-text">大自然</label>
-                        </div>
-                        <div className="input-group">
-                            <div className="input-group-text bg-white">
-                                <input className="form-check-input mt-0" id="userNeed1-2" type="checkbox" name="userNeed1" value="線上課程教案設計" />
-                            </div>
-                            <label className="input-group-text">藝文體驗</label>
-                        </div>
-                        <div className="input-group">
-                            <div className="input-group-text bg-white">
-                                <input className="form-check-input mt-0" id="userNeed1-3" type="checkbox" name="userNeed1" value="設備與軟體操作" />
-                            </div>
-                            <label className="input-group-text">室內靜態</label>
-                        </div>
-                        <div className="input-group">
-                            <div className="input-group-text bg-white">
-                                <input className="form-check-input mt-0" id="userNeed1-4" type="checkbox" name="userNeed1" value="無法掌握學生學習狀況" />
-                            </div>
-                            <label className="input-group-text">親子</label>
-                        </div>
+                        {[
+                            '山林', '戶外', '室內', '飲食', '海'
+                            // , '在地體驗（DIY）', '攝影','動物', '歷史'
+                            , '運動(腳踏車、衝浪等)', '親子'
+                        ].map(x =>
+                            <div className="input-group">
+                                <div className="input-group-text bg-white">
+                                    <input className="form-check-input mt-0" type="checkbox" value={x} />
+                                </div>
+                                <label className="input-group-text">{x}</label>
+                            </div>)}
                     </div>
                 </div>
                 <div className="input-group mb-3">
