@@ -74,7 +74,7 @@ function submit(e, cookies) {
   return;
   // fetch
 }
-function Teamup() {
+export function Teamup() {
   const [regions, setRegions] = useState(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(null);
@@ -186,4 +186,3 @@ function Teamup() {
     </main>
   );
 }
-export default Teamup;

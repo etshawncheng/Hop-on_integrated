@@ -33,7 +33,7 @@ function submit(e, setId) {
     }).finally(() => {
     });
 }
-function Login() {
+export function Login() {
   const [id, setId] = useState(null);
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
@@ -75,4 +75,3 @@ function Login() {
     </main>
   )
 };
-export default Login;

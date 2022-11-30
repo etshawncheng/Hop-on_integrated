@@ -116,7 +116,7 @@ function addSpot(e, spotLists, setSpotLists) {
     });
 }
 
-function Queries() {
+export function Queries() {
     const [searchKey, setSearchKey] = useState("");
     const [searchResults, setsearchResults] = useState(null);
     const [preferedList, setPreferedList] = useState([]);
@@ -187,4 +187,3 @@ function Queries() {
         </main>
     )
 };
-export default Queries;

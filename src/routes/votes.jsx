@@ -48,7 +48,7 @@ function submitVote(e, data, setData, setErr, cookies) {
         });
 }
 
-function Votes() {
+export function Votes() {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
     const [err, setErr] = useState(null);
@@ -127,5 +127,4 @@ function Votes() {
     } else {
         return (<h1>error</h1>);
     }
-}
-export default Votes;
+};

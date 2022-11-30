@@ -52,7 +52,7 @@ function fetchSpot(e, searchKey, setsearchResults) {
   });
 }
 
-function Views() {
+export function Views() {
   const [searchKey, setSearchKey] = useState("");
   const [searchResults, setsearchResults] = useState(null);
   useEffect(() => {
@@ -109,4 +109,3 @@ function Views() {
     </main>
   );
 };
-export default Views;

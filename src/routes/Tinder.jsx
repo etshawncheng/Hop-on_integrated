@@ -113,7 +113,7 @@ import TopNav from '../components/topNav';
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-export default function Views() {
+export function Tinder() {
     return (
       <main style={{ padding: "1rem 0" }}>
         {TopNav("Tinder")}

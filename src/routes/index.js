@@ -1,0 +1,18 @@
+import { Home } from "./Home";
+import { Votes } from './votes';
+import { Teamup } from './Teamup';
+import { Views } from './views';
+import { Queries } from './Query';
+import { Member } from './Member';
+import { Schedule } from './Schedule';
+import { Tinder } from './Tinder';
+import { Login } from './Login';
+export { Home };
+export { Votes };
+export { Teamup };
+export { Views };
+export { Queries };
+export { Member };
+export { Schedule };
+export { Tinder };
+export { Login };

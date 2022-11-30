@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Carousel, Container, Row } from 'react-bootstrap';
 import List from "./List";
-import {Button} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import MapUI from '../containers/MapUIContainer';
 import { formMapPlan } from "../reducers/routePlanSlice";
 import { updateMapPlan } from "../reducers/mapSettingSlice";
 import { useDispatch } from 'react-redux';
 
-export default function RouteUI({routePlan}) {
+export default function RouteUI({ routePlan }) {
   const dispatch = useDispatch();
   //Carousel 的State
   const [index, setIndex] = useState(0);
   const [routeChanged, setRouteChanged] = useState(false);
-  const [final, setFinal] = useState(true); 
+  const [final, setFinal] = useState(true);
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };
@@ -21,13 +21,13 @@ export default function RouteUI({routePlan}) {
     const mapPlan = formMapPlan(routePlan[0].route[index].views);
     dispatch(updateMapPlan(mapPlan))
     setRouteChanged(routePlan[0].routeChanged)
-  },[routePlan[0].route[index].views])
+  }, [routePlan[0].route[index].views])
 
 
 
   return (
-    <span className='fullSpan' style={{fontFamily:'微軟正黑體'}}>
-      {final && <div><h1 style={{color:"#E6AD00", margin:"10px 0 0 0"}}>最終決定的路線</h1></div>}
+    <span className='fullSpan' style={{ fontFamily: '微軟正黑體' }}>
+      {final && <div><h1 style={{ color: "#E6AD00", margin: "10px 0 0 0" }}>最終決定的路線</h1></div>}
       <div
         style={{
           padding: "25px 100px 75px",

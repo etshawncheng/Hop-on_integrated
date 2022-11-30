@@ -4,7 +4,7 @@ import Video from './assets/Sunrise - 74704.mp4'
 import {AiOutlineSearch, AiOutlineSend} from 'react-icons/ai'
 import './Home.css'
 
-export default function Home() {
+export function Home() {
     return (
       <main style={{ padding: "1rem 0" }}>
         
@@ -90,4 +90,4 @@ export default function Home() {
 
       </main>
     );
-  }
+  };

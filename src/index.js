@@ -6,19 +6,10 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
-import Votes from './routes/votes';
-import Teamup from './routes/Teamup';
-import Home from './routes/Home';
-import Views from './routes/views';
-import Queries from './routes/Query';
-import Member from './routes/Member';
-import Schedule from './routes/Schedule';
-import Tinder from './routes/Tinder';
-import Login from './routes/Login';
+import { Votes, Teamup, Home, Views, Queries, Member, Schedule, Tinder, Login } from './routes/index';
 import rootReducer from "./reducers";
 import RouteUI from "./containers/RouteUIContainer"
 import { configureStore } from '@reduxjs/toolkit';
-/*global google*/
 
 const store = configureStore({ //建立store
   reducer: rootReducer,
