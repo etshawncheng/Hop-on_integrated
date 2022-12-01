@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useJsApiLoader, DirectionsService, GoogleMap, DirectionsRenderer, useLoadScript } from '@react-google-maps/api';
-import { updateResults } from '../reducers/mapSettingSlice';
+import { updateResults} from '../reducers/mapSettingSlice';
 import { Spinner } from 'react-bootstrap';
+
 
 export default function MapUI({ mapSetting }) {
     const center = { lat: 25.033964, lng: 121.564468 }
@@ -25,6 +26,8 @@ export default function MapUI({ mapSetting }) {
     if (loadError) {
         console.log(loadError);
     }
+
+   
 
     useEffect(() => {
         if (mapSetting.status === "notFound") {
@@ -48,7 +51,7 @@ export default function MapUI({ mapSetting }) {
             console.log(results);
         }
     }
-    
+
     function clearRoute() {
         setDirectionsResponse({ routes: [] });
     }
@@ -73,7 +76,8 @@ export default function MapUI({ mapSetting }) {
                     {mapSetting.status === "found" && <DirectionsRenderer directions={directionsResponse} />}
                 </GoogleMap>
             </div>
-        )}
+        )
+    }
     return isLoaded ? renderMap() : <Spinner style={{ position: 'absolute' }} />
 
 }

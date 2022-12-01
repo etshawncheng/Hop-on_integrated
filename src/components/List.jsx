@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRoute } from '@fortawesome/free-solid-svg-icons';
 import { DndContext, useSensor, useSensors, PointerSensor, closestCenter } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
-import { useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { exchangeViewsOrder } from "../reducers/routePlanSlice";
 
 
@@ -39,36 +39,36 @@ export default function List({ title, list, listId }) {
         const overIndex = list.views.indexOf(over.id)
         // toggleRouteStatus(listId)
         const updatedViews = arrayMove(list.views, activeIndex, overIndex)
-        dispatch(exchangeViewsOrder({listId, updatedViews}));
+        dispatch(exchangeViewsOrder({ listId, updatedViews }));
     }
 
     return (
-        <div className="list p-2 m-1 rounded-lg" style={{fontFamily:'微軟正黑體'}}>
+        <div className="list p-2 m-1 rounded-lg" style={{ fontFamily: '微軟正黑體' }}>
             <div className="title">{title}</div>
             <DndContext onDragEnd={drageEndEvent} sensors={sensors} collisionDetection={closestCenter}>
                 <SortableContext items={list.views}>
-                    <h2 >第{listId+1}天</h2>
+                    <h2 >第{listId + 1}天</h2>
                     {list.views.map((view, index) => (
-                        <View id={view} key={index} name={view.name} listId={listId} viewId={index} />
+                        <View id={view} key={index} name={view.attraction_name} listId={listId} viewId={index} />
                     ))}
                 </SortableContext>
             </DndContext>
-            {showNew && <NewView listId={listId} toggleShowNew={toggleShowNew}/>}
-            <div style={{verticalAlign:'middle', lineHeight: '38px', width:'90%'}}>
+            {showNew && <NewView listId={listId} toggleShowNew={toggleShowNew} />}
+            <div style={{ verticalAlign: 'middle', lineHeight: '38px', width: '90%' }}>
                 {!showNew && (
-                    <div className="footer pt-2  d-flex" style={{position:'relative',float: 'left',width:'40%', height:'50px', margin:'1px 10px 1px 15px'}} >
-                        <Button variant="primary" style={{position:'relative', width:'100%', height:'40px',top: '15px'}}
+                    <div className="footer pt-2  d-flex" style={{ position: 'relative', float: 'left', width: '40%', height: '50px', margin: '1px 10px 1px 15px' }} >
+                        <Button variant="primary" style={{ position: 'relative', width: '100%', height: '40px', top: '15px' }}
                             className="py-1 flex-grow-1 text-left"
                             onClick={toggleShowNew}
                         >新增景點</Button>
                     </div>)}
-                <div style={{position:'relative', float: 'left',width:'120px',height:'50px',margin:'1px 5px 1px 0px'}}>
-                    <Button variant="primary" onClick={handleShow} style={{position:'relative', width:'100%', top: '22px', height:'40px'}}>
+                <div style={{ position: 'relative', float: 'left', width: '120px', height: '50px', margin: '1px 5px 1px 0px' }}>
+                    <Button variant="primary" onClick={handleShow} style={{ position: 'relative', width: '100%', top: '22px', height: '40px' }}>
                         {/* <FontAwesomeIcon icon={faRoute} /> */}
                         路線資訊
                     </Button></div>
             </div>
-            <Offcanvas key={listId} show={showRoute} onHide={handleClose} style={{fontFamily:'微軟正黑體'}}>
+            <Offcanvas key={listId} show={showRoute} onHide={handleClose} style={{ fontFamily: '微軟正黑體' }}>
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>路線資訊</Offcanvas.Title>
                 </Offcanvas.Header>
