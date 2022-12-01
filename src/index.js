@@ -25,10 +25,10 @@ root.render(
         <Route path="Votes" element={<Votes />} />
         <Route path="queries" element={<Queries />} />
         <Route path="views" element={<Views />} />
-        <Route path="Schedule" element={<Schedule />} />
+        <Route path="Schedule" element={<RouteUI />} />
         <Route path="Member" element={<Member />} />
         <Route path="Tinder" element={<Tinder />} />
-        <Route path="c" element={<RouteUI />} />
+        {/* <Route path="c" element={<RouteUI />} /> */}
       </Routes>
     </BrowserRouter></Provider>
 );

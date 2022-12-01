@@ -127,26 +127,28 @@ export function Queries() {
     }, [searchKey, searchResults, prefered, preferedList, unpreferedList])
     return (
         <main style={{
-            padding: "1rem 0"
-            // , overflow: "scroll"
+            padding: "1rem 0", width: "80%", alignItems: "center", margin: "auto"
         }}>
             {TopNav("Query")}
 
-            <form onSubmit={(e) => { submitQuery(e) }}>
+            < form onSubmit={(e) => { submitQuery(e) }
+            }>
                 <p>偏好的旅遊類型？(可複選)</p>
                 <div className="input-group mb-3">
-                    <div className="input-group-text bg-white flex-fill flex-column">
-                        {[
-                            '山林', '戶外', '室內', '飲食', '海'
-                            // , '在地體驗（DIY）', '攝影','動物', '歷史'
-                            , '運動(腳踏車、衝浪等)', '親子'
-                        ].map(x =>
-                            <div className="input-group">
-                                <div className="input-group-text bg-white">
-                                    <input className="form-check-input mt-0" type="checkbox" value={x} />
-                                </div>
-                                <label className="input-group-text">{x}</label>
-                            </div>)}
+                    <div className='form-control border-white'>
+                        <div className="row">
+                            {[
+                                '山林', '戶外', '室內', '飲食', '海'
+                                , '在地體驗', '攝影', '動物', '歷史'
+                                , '運動', '親子'
+                            ].map(x =>
+                                <div className="input-group-text col bg-white">
+                                    <div className="">
+                                        <input className="form-check-input mt-0" type="checkbox" value={x} />
+                                    </div>
+                                    <label className="">{x}</label>
+                                </div>)}
+                        </div>
                     </div>
                 </div>
                 <div className="input-group mb-3">
@@ -183,7 +185,7 @@ export function Queries() {
                     <span className="form-control">{(unpreferedList) ? SpotList(unpreferedList, setUnpreferedList) : null}</span>
                 </div>
                 <button type="submit" className='btn btn-primary' value="submit">送出</button>
-            </form>
-        </main>
+            </form >
+        </main >
     )
 };
