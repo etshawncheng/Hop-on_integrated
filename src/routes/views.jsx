@@ -9,7 +9,7 @@ import './views.css'
 import TopNav from '../components/topNav';
 import React, { useState, useEffect } from 'react';
 import url from '../url';
-
+import { useNavigate, useLocation } from 'react-router-dom';
 function SearchOptions(data) {
   return (<>
     <div>名稱：{data["attraction_name"]}</div>
@@ -55,6 +55,7 @@ function fetchSpot(e, searchKey, setsearchResults) {
 export function Views() {
   const [searchKey, setSearchKey] = useState("");
   const [searchResults, setsearchResults] = useState(null);
+  const navigate = useNavigate();
   useEffect(() => {
     console.debug(searchResults);
   }, [searchKey, searchResults])

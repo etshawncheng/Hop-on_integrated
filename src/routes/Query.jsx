@@ -123,6 +123,7 @@ export function Queries() {
     const [preferedList, setPreferedList] = useState([]);
     const [unpreferedList, setUnpreferedList] = useState([]);
     const [prefered, setPrefered] = useState(true);
+    const navigate = useNavigate()
     useEffect(() => {
 
     }, [searchKey, searchResults, prefered, preferedList, unpreferedList])
