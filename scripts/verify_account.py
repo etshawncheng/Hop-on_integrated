@@ -1,7 +1,7 @@
 import sys
 import pymysql
 import json
-import struct
+
 def verify(account:str, password:str)->str:
     conn = None
     with open("config.json", mode="r", encoding="utf-8") as f:
