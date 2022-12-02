@@ -1,6 +1,7 @@
 import Vote from '../components/vote';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import './Query.css';
 import React from 'react';
 import TopNav from '../components/topNav';
 import SpotList from '../components/spotList';

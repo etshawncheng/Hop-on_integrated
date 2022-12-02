@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import TopNav from '../components/topNav';
 import { useCookies } from 'react-cookie';
 import url from '../url';
-import { maxSatisfying } from 'semver';
+import './Vote.css';
+
 function submitVote(e, data, setData, setErr, cookies) {
     e.preventDefault();
     fetch(url
@@ -155,8 +156,8 @@ export function Votes() {
     if (err === null & loading === false & data !== null) {
         // console.debug(selections);
         return (
-            <main style={{ padding: "1rem 0" }}>
-                {TopNav("Votes")}
+            <main style={{ padding: "1rem 0", width:"80%", alignItems: "center", margin: "auto" }}>
+                {TopNav("Votes", navigate)}
                 <div className="row p-3 border bg-light justify-content-md-center">
                     <div className="col-sm-8">
                         <label>隊伍1</label>

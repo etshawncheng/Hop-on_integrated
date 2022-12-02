@@ -22,9 +22,9 @@ root.render(
         <Route path="/" element={<Login />} />
         <Route path="Home" element={<Home />} />
         <Route path="Teamup" element={<Teamup />} />
-        <Route path="Votes" element={<Votes />} />
-        <Route path="queries" element={<Queries />} />
-        <Route path="views" element={<Views />} />
+        <Route path="Vote" element={<Votes />} />
+        <Route path="Query" element={<Queries />} />
+        <Route path="View" element={<Views />} />
         <Route path="Schedule" element={<RouteUI />} />
         <Route path="Member" element={<Member />} />
         <Route path="Tinder" element={<Tinder />} />

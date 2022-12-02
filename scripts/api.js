@@ -39,7 +39,7 @@ router.post('/api', function (req, res) {
       var dataToSend = null;
       // spawn new child process to call the python script
       const argv = req.body["query"].map(x => x);
-      // argv[0] = "./scripts/" + argv[0]
+      argv[0] = "./scripts/" + argv[0]
       console.debug(argv);
       const python = spawn('python_env/Scripts/python', argv);
       // collect data from script

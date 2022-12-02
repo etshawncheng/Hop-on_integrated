@@ -8,8 +8,8 @@ import Kaohsiung from './assets/koahsuing.jpg'
 import './views.css'
 import TopNav from '../components/topNav';
 import React, { useState, useEffect } from 'react';
-//////////////////////////////////////////////////////////////////////////上面 JS 
 import url from '../url';
+
 function SearchOptions(data) {
   return (<>
     <div>名稱：{data["attraction_name"]}</div>

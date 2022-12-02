@@ -15,12 +15,12 @@ var app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "build")));
 app.use('/', api);
-// app.get("/",(req, res, next) => {
-//   // res.render(path.join(__dirname, "src", "index.js"));
-//   res.sendFile(path.join(__dirname, "src", "index.js"));
-// });
+app.use(express.static(path.join(__dirname, "build")));
+app.get("/",(req, res, next) => {
+  // res.render(path.join(__dirname, "src", "index.js"));
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
