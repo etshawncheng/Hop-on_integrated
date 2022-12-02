@@ -1,38 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { formMapPlan } from "../reducers/routePlanSlice";
-import { updateMapPlan } from "../reducers/mapSettingSlice";
-import { useDispatch } from 'react-redux';
-import List from "./List";
-import { Carousel, Container, Row } from 'react-bootstrap';
-function Travel_Schedule(shouldExsit, data) {
-    return (shouldExsit, data)
+function Travel_Schedule(shouldExsit, data, i) {
+    // console.debug(data?data[i]:null)
+    return (shouldExsit)
         ? <div className="col-8">
-            <div>
-                <label>
-                    {data["travel_schedule"]}
-                </label>
-            </div>
+            {data ? data[i].map((d, i) =>
+                <div key={i}>
+                    <span>第{i + 1}天：</span>
+                    {d.map((a, i) =>
+                        (i !== d.length - 1)? <>
+                                <span key={a["attraction_id"]}>{a["attraction_name"]}</span>
+                                <span>{" >> "}</span>
+                            </>
+                            : <span key={a["attraction_id"]}>{a["attraction_name"]}</span>
+                    )}
+                </div>
+            ) : null}
         </div>
         : null
 }
-function Vote(data, i, setSelections, selections, radio, setRadio) {
-    const routePlan = data[""];
-    const dispatch = useDispatch();
-    //Carousel 的State
-    const [index, setIndex] = useState(0);
-    const [routeChanged, setRouteChanged] = useState(false);
-    const [final, setFinal] = useState(true);
-    const handleSelect = (selectedIndex, e) => {
-        setIndex(selectedIndex);
-    };
-
-    useEffect(() => {
-        const mapPlan = formMapPlan(routePlan[0].route[index].views);
-        dispatch(updateMapPlan(mapPlan))
-        setRouteChanged(routePlan[0].routeChanged)
-    }, [routePlan[0].route[index].views])
-
-
+function Vote(data, i, setSelections, selections, radio, setRadio, routes, setRoutes) {
+    console.debug(routes)
     return (
         <div className="row p-3 border bg-light justify-content-md-center" key={data["user_id"]}>
             <div className="col-sm-2">
@@ -56,35 +43,7 @@ function Vote(data, i, setSelections, selections, radio, setRadio) {
                     <label className="form-check-label"> {selections.get(data["user_id"]) ? "顯示" : "關閉"}旅程規劃 </label>
                 </div>
             </div>
-            <div
-                style={{
-                    display: 'inline-block',
-                    width: '25%',
-                    height: '600px',
-                    verticalAlign: 'top',
-                    // height: '100%',
-                }}>
-                <Carousel fade activeIndex={index} onSelect={handleSelect} interval={null}>
-                    {routePlan[0].route.map((list, index) => (<Carousel.Item key={index}>
-                        <div style={{
-                            padding: '10px 50px 75px',
-                            height: '600px',
-                            backgroundColor: '#01579b',
-                            verticalAlign: 'top',
-                        }}>
-                            <Container fluid className="board p-1">
-                                <Row className="m-0">
-                                    <List
-                                        key={index}
-                                        list={list}
-                                        listId={index}
-                                    />
-                                </Row>
-                            </Container>
-                        </div>
-                    </Carousel.Item>))}
-                </Carousel>
-            </div>
+            {Travel_Schedule(selections.get(data["user_id"]), routes, i)}
         </div>
     );
 }
