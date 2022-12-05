@@ -13,24 +13,24 @@ export function Home() {
       {/* ------------------------------------------------------------------------- */}
         
       <h2>Hop On</h2>  
-        <Nav.Item  className="Nav.Item"   as="li">
-      <Nav.Link href="/Home">Home</Nav.Link>
+      <Nav.Item  className="Nav.Item"   as="li">
+      <Nav.Link href="/Home">首頁</Nav.Link>
         </Nav.Item>
         <h2 >l</h2>
       <Nav.Item className="Nav.Item" as="li">
-        <Nav.Link href="/Teamup">Team up</Nav.Link>
+        <Nav.Link href="/Teamup">組隊</Nav.Link>
         </Nav.Item>
         <h2 >l</h2>
       <Nav.Item className="Nav.Item" as="li">
-        <Nav.Link href="/Vote">Vote</Nav.Link>
+        <Nav.Link href="/Vote">投票</Nav.Link>
       </Nav.Item>
       <h2 >l</h2>
         <Nav.Item className="Nav.Item" as="li">
-      <Nav.Link href="/views">Views</Nav.Link>
+      <Nav.Link href="/views">景點</Nav.Link>
         </Nav.Item>
         <h2 >l</h2>
         <Nav.Item className="Nav.Item" as="li">
-      <Nav.Link href="/Schedule">Schedule</Nav.Link>
+      <Nav.Link href="/Schedule">行程</Nav.Link>
         </Nav.Item>
         <h2 >l</h2>
       
