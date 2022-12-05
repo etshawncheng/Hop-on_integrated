@@ -1,5 +1,5 @@
 import { Home } from "./Home";
-import { Votes } from './Votes';
+import { Votes } from './Vote';
 import { Teamup } from './Teamup';
 import { Views } from './views';
 import { Queries } from './Query';

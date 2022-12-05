@@ -10,23 +10,23 @@ function TopNav(pageName) {
         </Nav.Item>
         <h2 >l</h2> */}
             <Nav.Item as="li">
-                <Nav.Link href="/Teamup">Team up</Nav.Link>
+                <Nav.Link href="/Teamup">組隊</Nav.Link>
             </Nav.Item>
             <h2 >l</h2>
             <Nav.Item as="li">
-                <Nav.Link href="/Vote">Vote</Nav.Link>
+                <Nav.Link href="/Vote">投票</Nav.Link>
             </Nav.Item>
             <h2 >l</h2>
             <Nav.Item as="li">
-                <Nav.Link href="/View">Views</Nav.Link>
+                <Nav.Link href="/View">景點</Nav.Link>
             </Nav.Item>
             <h2 >l</h2>
             <Nav.Item as="li">
-                <Nav.Link href="/Query">Query</Nav.Link>
+                <Nav.Link href="/Query">問卷</Nav.Link>
             </Nav.Item>
             <h2 >l</h2>
             <Nav.Item as="li">
-                <Nav.Link href="/Schedule">Schedule</Nav.Link>
+                <Nav.Link href="/Schedule">行程</Nav.Link>
             </Nav.Item>
             <h2 >l</h2>
             <div className="nav-icons">
