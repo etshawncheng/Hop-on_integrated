@@ -14,10 +14,10 @@ export function Member() {
       
       {/* <div class="vh-300 d-flex justify-content-center align-items-center ">
             <div class="col-md-5 p-5 shadow-sm border rounded-5 border-primary bg-white"> */}
-      <h2 className="text-center mb-4 text-primary">Your Trip History</h2>
+      <h2 className="text-center mb-4 text-primary">關於你</h2>
       <div className="mb-3">
         <center>
-          <h3 className="form-label">Upcoming trips</h3>
+          <h3 className="form-label">歷史行程</h3>
           <ul className="container">
             <li><img src="https://pgw.udn.com.tw/gw/photo.php?u=https://uc.udn.com.tw/photo/2020/04/07/99/7702421.jpg&x=0&y=0&sw=0&sh=0&sl=W&fw=800&exp=3600&w=930" width="500vw" height="500vw"></img>
               <div className="d-grid">Trip #1</div>

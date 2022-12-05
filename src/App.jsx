@@ -21,23 +21,23 @@ const App = () => (
        {/* <div class="navitem"> */}
 
        <Nav.Item as="li">
-         <Nav.Link href="/Home">Home</Nav.Link>
+         <Nav.Link href="/Home">首頁</Nav.Link>
        </Nav.Item>
        <h2 >l</h2>
        <Nav.Item as="li">
-         <Nav.Link href="/Teamup">Team up</Nav.Link>
+         <Nav.Link href="/Teamup">組隊</Nav.Link>
        </Nav.Item>
        <h2 >l</h2>
        <Nav.Item as="li">
-         <Nav.Link href="/Votes">Vote</Nav.Link>
+         <Nav.Link href="/Votes">投票</Nav.Link>
        </Nav.Item>
        <h2 >l</h2>
        <Nav.Item as="li">
-         <Nav.Link href="/views">Views</Nav.Link>
+         <Nav.Link href="/views">景點</Nav.Link>
        </Nav.Item>
        <h2 >l</h2>
        <Nav.Item as="li">
-         <Nav.Link href="/Schedule">Schedule</Nav.Link>
+         <Nav.Link href="/Schedule">行程</Nav.Link>
        </Nav.Item>
        <h2 >l</h2>
        {/* <div className="nav-icons"> */}
@@ -55,25 +55,24 @@ const App = () => (
       {/* ----------------------------------------------------------------------------------- */}
       <div class="vh-100 d-flex justify-content-center align-items-center ">
         <div class="col-md-5 p-5 shadow-sm border rounded-5 border-primary bg-white">
-            <h2 class="text-center mb-4 text-primary">Login Form</h2>
+            <h2 class="text-center mb-4 text-primary">登入</h2>
                 <form>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email address</label>
+                        <label for="exampleInputEmail1" class="form-label">信箱</label>
                         <input type="email" class="form-control border border-primary" id="exampleInputEmail1" aria-describedby="emailHelp"></input>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <label for="exampleInputPassword1" class="form-label">密碼</label>
                         <input type="password" class="form-control border border-primary" id="exampleInputPassword1"></input>
                     </div>
-                    <p class="small"><a class="text-primary" href="forget-password.html">Forgot password?</a></p>
+                    <p class="small"><a class="text-primary" href="forget-password.html">忘記密碼?</a></p>
                     <div class="d-grid">
-                        <button class="btn btn-primary" type="submit">Login</button>
+                        <button class="btn btn-primary" type="submit">登入</button>
                     </div>
                 </form>
                 <div class="mt-3">
-                    <p class="mb-0  text-center">Don't have an account? <a href="signup.html"
-                            class="text-primary fw-bold">Sign
-                            Up</a></p>
+                    <p class="mb-0  text-center">沒有帳號嗎? <a href="signup.html"
+                            class="text-primary fw-bold">註冊</a></p>
                 </div>
             </div>
     </div>
