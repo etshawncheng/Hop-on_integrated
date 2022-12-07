@@ -20,13 +20,13 @@ export function Member() {
           <h3 className="form-label">歷史行程</h3>
           <ul className="container">
             <li><img src="https://pgw.udn.com.tw/gw/photo.php?u=https://uc.udn.com.tw/photo/2020/04/07/99/7702421.jpg&x=0&y=0&sw=0&sh=0&sl=W&fw=800&exp=3600&w=930" width="500vw" height="500vw"></img>
-              <div className="d-grid">Trip #1</div>
+              <div className="d-grid">七星潭 - 花蓮</div>
             </li>
             <li><img src="https://www.hl-go.com.tw/images/beach.jpg" width="500vw" height="500vw"></img>
-              <div className="d-grid">Trip #2</div>
+              <div className="d-grid">清水斷崖 - 花蓮</div>
             </li>
             <li><img src="https://taiwan.sharelife.tw/tw-feat-pres-img/52542/4e10040620182315.jpg" width="500vw" height="500vw"></img>
-              <div className="d-grid">Trip #3</div>
+              <div className="d-grid">太魯閣國家公園 - 花蓮</div>
             </li>
           </ul>
           <div className="d-grid">
