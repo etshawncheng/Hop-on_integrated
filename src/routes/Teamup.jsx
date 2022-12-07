@@ -5,6 +5,19 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import url from '../url';
+import emailjs from 'emailjs-com';
+import Alert from 'react-bootstrap/Alert';
+
+function emailForm(email) {
+  return (
+    <form id="test">
+      <input type="hidden" name="to_email" value={email} />
+      <input type="hidden" name="to_name" value={""} />
+      <input type="hidden" name="to_reply" value={""} />
+      <input type="hidden" name="message" value={""} />
+    </form>
+  )
+}
 function addGuest(e, guestList, setGuestList) {
   const L = guestList.map(x => x);
   L.push("");
@@ -12,17 +25,22 @@ function addGuest(e, guestList, setGuestList) {
   setGuestList(L);
 }
 function Guest(value, i, guestList, setGuestList) {
-  return <>
-    <input type="email" placeholder='email:' value={value}
-      onChange={e => {
-        const L = guestList.map(x => x);
-        L[i] = e.target.value;
-        setGuestList(L);
-      }}
-    /><button type="button" className='btn btn-primary' onClick={e => {
-      guestList.length !== 1 ? setGuestList(guestList.splice(i, 1)) : setGuestList([])
-    }}>remove</button>
-  </>
+  return (
+    <form name="email-form">
+      <input type="email" name="to_email" placeholder='email:' value={value}
+        onChange={e => {
+          const L = guestList.map(x => x);
+          L[i] = e.target.value;
+          setGuestList(L);
+        }}
+      />
+      <input type="hidden" name="to_name" value={""} />
+      <input type="hidden" name="to_reply" value={""} />
+      <input type="hidden" name="message" value={""} />
+      <button type="button" className='btn btn-primary' onClick={e => {
+        guestList.length !== 1 ? setGuestList(guestList.splice(i, 1)) : setGuestList([])
+      }}>remove</button>
+    </form>)
 }
 function submit(e, cookies) {
   e.preventDefault();
@@ -48,8 +66,11 @@ function submit(e, cookies) {
         } else if (e.target[i].id === "end") {
           period = (new Date(e.target[i].value) - new Date(start_date)) / (1000 * 60 * 60 * 24);
           if (period < 1) {
-            alert("not valid start date or end date!");
-            return;
+
+            // alert("not valid start date or end date!")
+            return (<Alert variant="success">
+              <Alert.Heading>not valid start date or end date!</Alert.Heading>
+            </Alert>);
           }
         }
         break;
@@ -71,6 +92,17 @@ function submit(e, cookies) {
   }
   const q = `INSERT INTO project.team(region_list,start_date,period,people_count,join_url,set_time,grouper_id,teammate_list)VALUES("${region_list}","${start_date}",${period},${people_count},${join_url},now(),${grouper_id},"[]")`;
   console.debug(q);
+  const forms = document.getElementsByName("email-form");
+  forms.forEach(e =>
+    // emailjs.sendForm('service_3qvcxup', 'template_1', e, process.env.REACT_APP_EMAIL_API_KEY)
+    //   .then((result) => {
+    //     console.log(result.text);
+    //   }, (error) => {
+    //     console.log(error.text);
+    //   })
+    console.debug(e)
+  );
+  alert("title", "繳交成功")
   return;
   // fetch
 }
@@ -83,6 +115,7 @@ export function Teamup() {
   const [end, setEnd] = useState(today);
   const [guestList, setGuestList] = useState([]);
   const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
+  const [alerted, setAlerted] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
@@ -131,13 +164,13 @@ export function Teamup() {
         </video>
         <center>
           <div className="content">
-            <form onSubmit={e => { submit(e, cookies) }}>
+            <form onSubmit={e => { console.debug("submit?"); submit(e, cookies) }}>
               <div className="mb-3">
                 <h1 className="form-label">Choose destination (city)</h1>
                 <div>
                   {regions ? regions.map(x =>
                     <div>
-                      <input className="region"checked="true" key={x["REGION_ID"]} type="checkbox" value={x["REGION_ID"]} /><label className="">{x["FIRST_DISTRICT_NAME"]}</label>
+                      <input className="region" key={x["REGION_ID"]} type="checkbox" value={x["REGION_ID"]} /><label className="">{x["FIRST_DISTRICT_NAME"]}</label>
                     </div>) : null}
                 </div>
               </div>
@@ -146,10 +179,10 @@ export function Teamup() {
                 onChange={e => {
                   const value = document.getElementById("start").value;
                   // if (value < end) {
-                     setStart(value) 
+                  setStart(value)
                   //   }
                   // else {
-                    // alert()
+                  // alert()
                   // }
                 }}
               />
@@ -179,6 +212,12 @@ export function Teamup() {
                   <input className="btn btn-primary" type="submit" />
                 </div>
               </div>
+            </form>
+            <form id="contact-form">
+              <input type="hidden" name="to_email" value={"108306068@g.nccu.edu.tw"} />
+              <input type="hidden" name="to_name" value={""} />
+              <input type="hidden" name="to_reply" value={""} />
+              <input type="hidden" name="message" value={""} />
             </form>
           </div>
         </center>

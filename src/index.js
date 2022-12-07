@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
@@ -10,6 +9,7 @@ import { Votes, Teamup, Home, Views, Queries, Member, Schedule, Tinder, Login } 
 import rootReducer from "./reducers";
 import RouteUI from "./containers/RouteUIContainer"
 import { configureStore } from '@reduxjs/toolkit';
+import Advanced from './components/Advanced';
 
 const store = configureStore({ //建立store
   reducer: rootReducer,
@@ -28,7 +28,7 @@ root.render(
         <Route path="Schedule" element={<RouteUI />} />
         <Route path="Member" element={<Member />} />
         <Route path="Tinder" element={<Tinder />} />
-        {/* <Route path="c" element={<RouteUI />} /> */}
+        {/* <Route path="c" element={<Advanced />} /> */}
       </Routes>
     </BrowserRouter></Provider>
 );

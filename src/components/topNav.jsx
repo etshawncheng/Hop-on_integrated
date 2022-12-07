@@ -6,9 +6,9 @@ function TopNav(pageName) {
         <Nav defaultActiveKey="/" as="ul">
             <h2>{pageName}</h2>
             {/* <Nav.Item as="li">
-            <Nav.Link href="/Home">Home</Nav.Link>
-        </Nav.Item>
-        <h2 >l</h2> */}
+                <Nav.Link href="/Home">Home</Nav.Link>
+            </Nav.Item> */}
+            <h2 >l</h2>
             <Nav.Item as="li">
                 <Nav.Link href="/Teamup">Team up</Nav.Link>
             </Nav.Item>
