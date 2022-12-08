@@ -8,7 +8,7 @@ import { formMapPlan, setRoute } from "../reducers/routePlanSlice";
 import { updateMapPlan } from "../reducers/mapSettingSlice";
 import { useDispatch } from 'react-redux';
 import url from '../url';
-
+import TopNav from './topNav';
 export default function RouteUI({ routePlan }) {
   const dispatch = useDispatch();
   //Carousel 的State
@@ -47,6 +47,7 @@ export default function RouteUI({ routePlan }) {
         console.debug(parsed["data"])
         const viewLists = parsed["data"][0]["travel_schedule"].split("/").map(x => x.split(","));
         console.debug(viewLists)
+        console.debug(viewLists.flat().map(x => "attraction_id=" + x).join(" or "))
         let q = `select attraction_id, attraction_name, attraction_pluscode from project.attraction where ${viewLists.flat().map(x => "attraction_id=" + x).join(" or ")}`;
         fetch(url
           , {
@@ -67,10 +68,12 @@ export default function RouteUI({ routePlan }) {
           let parsed = JSON.parse(raw);
           // console.debug(parsed);
           if (!parsed) throw Error('wrong data format!');
+
           const route = viewLists.map(x =>
           ({
             views: parsed["data"].filter(y => -1 != x.indexOf(String(y["attraction_id"])))
           })
+
           );
           console.debug(route)
           dispatch(setRoute({ route }));
@@ -85,6 +88,7 @@ export default function RouteUI({ routePlan }) {
     }
     else {
       console.debug("fetched");
+      console.debug(routePlan[0].route[index])
       const mapPlan = formMapPlan(routePlan[0].route[index].views);
       console.log(mapPlan);
       dispatch(updateMapPlan(mapPlan))
@@ -96,6 +100,7 @@ export default function RouteUI({ routePlan }) {
 
   if (routePlan[0].route) {
     return (
+
       <span className='fullSpan' style={{ fontFamily: '微軟正黑體', height: '100%', weight: '100%' }}>
         {/* {final && <div><h1 style={{ postion:'relative',color: "#E6AD00", margin: "10px 0 0 0" }}>最終決定的路線</h1></div>} */}
         <div>
@@ -127,6 +132,7 @@ export default function RouteUI({ routePlan }) {
         </div>
       </span >
     );
+
   } else {
     return null
   }

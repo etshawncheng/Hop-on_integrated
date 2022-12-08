@@ -1,2 +1,2 @@
-const url = "http://localhost:5000/api";
+const url = process.env.REACT_APP_API_URL;
 export default url;

@@ -1,11 +1,14 @@
 import Vote from '../components/vote';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import './Query.css';
 import React from 'react';
 import TopNav from '../components/topNav';
 import SpotList from '../components/spotList';
 import url from '../url';
-function submitQuery(e, cookies) {
+import { useCookies } from 'react-cookie';
+
+function submitQuery(e, cookies, navigate) {
     e.preventDefault();
     // console.debug(e.target);
     // return;
@@ -36,8 +39,10 @@ function submitQuery(e, cookies) {
     }
     const q = `INSERT INTO project.comprehensive_inquiry(team_id,user_id,spot_type,spot_per_day,liked_spot_list)VALUES(${team_id},${user_id},${spot_type},${spot_per_day},${liked_spot_list})`;
     console.debug(q);
-    return;
+    // return;
     // fetch
+    alert("submit success")
+    navigate("/Tinder");
 }
 function SearchOptions(data) {
     return <option key={data["attraction_id"]} value={data["attraction_id"]}>{data["attraction_name"]}</option>
@@ -46,7 +51,7 @@ function fetchSpot(e, searchKey, setsearchResults) {
     e.preventDefault();
     const value = document.getElementById("spot-name").value;
     if ('' == value) {
-        console.debug("illegal empty search key");
+        alert("illegal empty search key");
         return;
     }
     fetch(url
@@ -81,7 +86,7 @@ function addSpot(e, spotLists, setSpotLists) {
     for (let i = 0; i < spotLists.length; i++) {
         if (spotLists[i]["attraction_id"] == value) {
             // display user
-            console.debug(`${value} in spotLists`);
+            alert(`${value} in spotLists`);
             return;
         }
     }
@@ -106,8 +111,8 @@ function addSpot(e, spotLists, setSpotLists) {
         // console.debug(parsed);
         if (!parsed) throw Error('wrong data format!');
         const L = spotLists.map(x => x);
-        console.debug(spotLists);
-        console.debug(parsed["data"][0]);
+        // console.debug(spotLists);
+        // console.debug(parsed["data"][0]);
         L.push(parsed["data"][0]);
         setSpotLists(L);
     }).catch((reason) => {
@@ -122,31 +127,35 @@ export function Queries() {
     const [preferedList, setPreferedList] = useState([]);
     const [unpreferedList, setUnpreferedList] = useState([]);
     const [prefered, setPrefered] = useState(true);
+    const [cookies, setCookie, removeCookie] = useCookies(["cookie-name"])
+    const navigate = useNavigate()
     useEffect(() => {
 
     }, [searchKey, searchResults, prefered, preferedList, unpreferedList])
     return (
         <main style={{
-            padding: "1rem 0"
-            // , overflow: "scroll"
+            padding: "1rem 0", width: "80%", alignItems: "center", margin: "auto"
         }}>
             {TopNav("Query")}
 
-            <form onSubmit={(e) => { submitQuery(e) }}>
+            <form onSubmit={(e) => { submitQuery(e, cookies, navigate) }}>
                 <p>偏好的旅遊類型？(可複選)</p>
                 <div className="input-group mb-3">
-                    <div className="input-group-text bg-white flex-fill flex-column">
-                        {[
-                            '山林', '戶外', '室內', '飲食', '海'
-                            , '在地體驗（DIY）', '攝影','動物', '歷史'
-                            , '運動(腳踏車、衝浪等)', '親子'
-                        ].map(x =>
-                            <div className="input-group">
-                                <div className="input-group-text bg-white">
-                                    <input className="form-check-input mt-0" type="checkbox" value={x} />
-                                </div>
-                                <label className="input-group-text">{x}</label>
-                            </div>)}
+
+                    <div className='form-control border-white'>
+                        <div className="">
+                            {[
+                                '山林', '戶外', '室內', '飲食', '海'
+                                , '在地體驗', '攝影', '動物', '歷史'
+                                , '運動', '親子'
+                            ].map(x =>
+                                <div className="input-group-text col bg-white">
+                                    <div className="">
+                                        <input className="form-check-input mt-0" type="checkbox" value={x} />
+                                    </div>
+                                    <label className="">{x}</label>
+                                </div>)}
+                        </div>
                     </div>
                 </div>
                 <div className="input-group mb-3">
@@ -183,7 +192,7 @@ export function Queries() {
                     <span className="form-control">{(unpreferedList) ? SpotList(unpreferedList, setUnpreferedList) : null}</span>
                 </div>
                 <button type="submit" className='btn btn-primary' value="submit">送出</button>
-            </form>
-        </main>
+            </form >
+        </main >
     )
 };
