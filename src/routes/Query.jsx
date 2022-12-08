@@ -138,7 +138,7 @@ export function Queries() {
                     <div className="input-group-text bg-white flex-fill flex-column">
                         {[
                             '山林', '戶外', '室內', '飲食', '海'
-                            // , '在地體驗（DIY）', '攝影','動物', '歷史'
+                            , '在地體驗（DIY）', '攝影','動物', '歷史'
                             , '運動(腳踏車、衝浪等)', '親子'
                         ].map(x =>
                             <div className="input-group">

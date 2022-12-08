@@ -1,5 +1,5 @@
+
 import { createSlice } from "@reduxjs/toolkit";
-import url from '../url';
 
 let t = [
   {
@@ -45,7 +45,6 @@ let t = [
         attraction_pluscode: "7QJ3Q3RJ+JWC",
 
       },
-
       {
         attraction_name: '天際航空──飛行啟蒙基地(飛行學校)',
         attraction_pluscode: "7QJ3W4WP+8JM",
@@ -54,7 +53,7 @@ let t = [
     ],
   }]
 let serverData = [{
-  id:0,
+  id: 0,
   final: true,
   routeChanged: false,
   route: null
@@ -79,15 +78,21 @@ const routePlanSlice = createSlice({
   reducers: {
     //新增景點
     addView(state, action) {
-      const { listId, name } = action.payload;
-  state[0].route[listId].views.push({ attraction_name: name, attraction_pluscode: "", finished: false });
+      const { listId, newView } = action.payload;
+      state[0].route[listId].views.push(newView);
       state[0].routeChanged = true;
     },
     //更新景點
     updateView(state, action) {
-      const { listId, viewId, name } = action.payload;
-      state[0].route[listId].views.splice(viewId, 1, { attraction_name: name, attraction_pluscode: "", finished: false });
-      state[0].routeChanged = true;
+      const { listId, viewId, updatedView } = action.payload;
+      if (viewId !== null) {
+        state[0].route[listId].views.splice(viewId, 1, updatedView);
+        state[0].routeChanged = true;
+      }
+      else {
+        state[0].route[listId].views.push(updatedView);
+        state[0].routeChanged = true;
+      }
     },
     //刪除景點
     removeView(state, action) {

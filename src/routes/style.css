@@ -139,3 +139,11 @@ body {
 .fa-remove {
   color: #CDD6DD;
 }
+.div{
+  width:100%;
+  height: 100%;
+}
+
+.carousel-control {
+  width: 66%;
+}

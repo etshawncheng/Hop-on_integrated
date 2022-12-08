@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Carousel, Container, Row } from 'react-bootstrap';
-import List from "./List";
+import List from "../containers/ListContainer";
+import ViewSearchField from '../containers/ViewSearchFieldContainer';
 import { Button } from 'react-bootstrap';
 import MapUI from '../containers/MapUIContainer';
 import { formMapPlan, setRoute } from "../reducers/routePlanSlice";
@@ -66,7 +67,11 @@ export default function RouteUI({ routePlan }) {
           let parsed = JSON.parse(raw);
           // console.debug(parsed);
           if (!parsed) throw Error('wrong data format!');
-          const route = viewLists.map(x => ({views:parsed["data"].filter(y => y["attraction_id"] == x)}));
+          const route = viewLists.map(x =>
+          ({
+            views: parsed["data"].filter(y => -1 != x.indexOf(String(y["attraction_id"])))
+          })
+          );
           console.debug(route)
           dispatch(setRoute({ route }));
         }).catch((reason) => {
@@ -91,55 +96,31 @@ export default function RouteUI({ routePlan }) {
 
   if (routePlan[0].route) {
     return (
-      <span className='fullSpan' style={{ fontFamily: '微軟正黑體' }}>
-        {final && <div><h1 style={{ color: "#E6AD00", margin: "10px 0 0 0" }}>最終決定的路線</h1></div>}
-        <div
-          style={{
-            padding: "25px 100px 75px",
-            width: "100%",
-            // height: "100%",
-            // content: "",
-            clear: 'both',
-            display: 'table'
+      <span className='fullSpan' style={{ fontFamily: '微軟正黑體', height: '100%', weight: '100%' }}>
+        {/* {final && <div><h1 style={{ postion:'relative',color: "#E6AD00", margin: "10px 0 0 0" }}>最終決定的路線</h1></div>} */}
+        <div>
+          {/* <MapBoard listId={index} list={routePlan[index] }>map</MapBoard> */}
+          <MapUI>map</MapUI>
+          <div style={{
+            padding: '5% 50px 75px',
+            height: '100vh',
+            verticalAlign: 'top',
           }}>
-          <div
-            style={{
-              display: 'inline-block',
-              width: '75%',
-              // textAlign: 'center'
-            }}>
-            {/* <MapBoard listId={index} list={routePlan[index] }>map</MapBoard> */}
-            <MapUI>map</MapUI>
-          </div>
-          <div
-            style={{
-              display: 'inline-block',
-              width: '25%',
-              height: '600px',
-              verticalAlign: 'top',
-              // height: '100%',
-            }}>
-            <Carousel fade activeIndex={index} onSelect={handleSelect} interval={null}>
+            <Carousel fade activeIndex={index} onSelect={handleSelect} interval={null} style={{ width: '25%', height: '75vh',backgroundColor: '#01579b' }}>
               {routePlan[0].route.map((list, index) => (<Carousel.Item key={index}>
-                <div style={{
-                  padding: '10px 50px 75px',
-                  height: '600px',
-                  backgroundColor: '#01579b',
-                  verticalAlign: 'top',
-                }}>
-                  <Container fluid className="board p-1">
-                    <Row className="m-0">
-                      <List
-                        key={index}
-                        list={list}
-                        listId={index}
-                      />
-                    </Row>
-                  </Container>
-                </div>
+                <Container fluid className="board p-1" style={{ width: '80%', height: '100%' }}>
+                  <Row className="m-0">
+                    <List
+                      key={index}
+                      list={list}
+                      listId={index}
+                    />
+                  </Row>
+                </Container>
               </Carousel.Item>))}
             </Carousel>
           </div>
+          <ViewSearchField/>
         </div>
         <div>
           {routeChanged && <Button >提交修改後路線</Button>}

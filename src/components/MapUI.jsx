@@ -58,11 +58,11 @@ export default function MapUI({ mapSetting }) {
 
     const renderMap = () => {
         return (
-            <div className="map-container">
+            <div>
                 <GoogleMap
                     center={center}
                     zoom={16}
-                    mapContainerStyle={{ width: '100%', height: '600px' }}
+                    mapContainerStyle={{ width: '100%', height: '100%', position: 'absolute' }}
                     options={{
                         zoomControl: false,
                         streetViewControl: false,
