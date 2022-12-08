@@ -141,6 +141,7 @@ export function Queries() {
             <form onSubmit={(e) => { submitQuery(e, cookies, navigate) }}>
                 <p>偏好的旅遊類型？(可複選)</p>
                 <div className="input-group mb-3">
+
                     <div className='form-control border-white'>
                         <div className="">
                             {[

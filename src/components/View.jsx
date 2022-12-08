@@ -1,16 +1,15 @@
 import React, { useState, useRef } from 'react';
-import Edit from "./Edit";
 import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { removeView} from "../reducers/routePlanSlice";
+import { toggleShow, updateIdList } from '../reducers/searchFieldSlice';
 import { useDispatch } from 'react-redux';
 
 export default function View({ id, viewId, name, listId }) {
     const [isOver, setIsOver] = useState(false);
-    const [editState, setEditState] = useState(false);
     const dispatch = useDispatch();
     const targetRef = useRef(null);
     const { setNodeRef, listeners, transform, transition } = useSortable({ id });
@@ -38,7 +37,8 @@ export default function View({ id, viewId, name, listId }) {
     }
     //edit 按鈕功能
     function handleClickEdit() {
-        setEditState(true);
+        dispatch(toggleShow(true));
+        dispatch(updateIdList({ listId, viewId }));
     }
 
     return (
@@ -61,13 +61,6 @@ export default function View({ id, viewId, name, listId }) {
                         <FontAwesomeIcon icon={faTrash} style={{color:"#FF5C11",}}/>
                     </Button>
                 )}
-                {editState &&
-                    <Edit
-                        key={viewId}
-                        editState={editState}
-                        setEditState={setEditState}
-                        listId={listId}>
-                    </Edit>}
             </div>
         </div>
     );
