@@ -1,6 +1,7 @@
 import { Home } from "./Home";
 import { Votes } from './Vote';
 import { Teamup } from './Teamup';
+import { Signup } from './Signup';
 import { Views } from './views';
 import { Queries } from './Query';
 import { Member } from './Member';
@@ -16,3 +17,4 @@ export { Member };
 export { Schedule };
 export { Tinder };
 export { Login };
+export { Signup };

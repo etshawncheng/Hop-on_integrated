@@ -8,27 +8,27 @@ function TopNav(pageName) {
             {/* <Nav.Item as="li">
                 <Nav.Link href="/Home">Home</Nav.Link>
             </Nav.Item> */}
-            <h2 >l</h2>
+            <h2>l</h2>
             <Nav.Item as="li">
                 <Nav.Link href="/Teamup">組隊</Nav.Link>
             </Nav.Item>
-            <h2 >l</h2>
+            <h2>l</h2>
             <Nav.Item as="li">
                 <Nav.Link href="/Vote">投票</Nav.Link>
             </Nav.Item>
-            <h2 >l</h2>
+            <h2>l</h2>
             <Nav.Item as="li">
                 <Nav.Link href="/View">景點</Nav.Link>
             </Nav.Item>
-            <h2 >l</h2>
+            <h2>l</h2>
             <Nav.Item as="li">
                 <Nav.Link href="/Query">問卷</Nav.Link>
             </Nav.Item>
-            <h2 >l</h2>
+            <h2>l</h2>
             <Nav.Item as="li">
                 <Nav.Link href="/Schedule">行程</Nav.Link>
             </Nav.Item>
-            <h2 >l</h2>
+            <h2>l</h2>
             <div className="nav-icons">
                 <Nav.Item as="li">
                     <Nav.Link href="/Member">
@@ -36,6 +36,7 @@ function TopNav(pageName) {
                     </Nav.Link>
                 </Nav.Item>
             </div>
-        </Nav>)
+        </Nav>
+    )
 };
 export default TopNav;
