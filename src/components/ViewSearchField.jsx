@@ -69,7 +69,7 @@ export default function ViewSerachFields({ searchFieldSettings }) {
     }
 
     useEffect(() => {
-        document.getElementById("searchForm").reset();
+        // document.getElementById("searchForm").reset();
         dispatch(updateFoundAttractions({ foundAttractions: null }));
     },[searchFieldSettings.viewId])
 

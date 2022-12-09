@@ -116,45 +116,46 @@ export function Teamup() {
     console.debug("eff")
     if (submited) {
       if (submited === true) {
-        if (process.env.REACT_APP_EMAIL_API_KEY) {
-          const q = `select team_id from project.team where grouper_id=${cookies["user_id"]} and set_time=(select max(set_time) from project.team)`;
-          fetch(url
-            , {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-              }, body: JSON.stringify({ type: "sql", query: q })
-              // ,
-              // signal: controller.signal
-            }).then((response) => {
-              if (response.status !== 200) throw Error('http failed!');
-              return response.text();
-            }).then((raw) => {
-              // console.debug(raw);
-              if (!raw) throw Error('no data!');
-              const parsed = JSON.parse(raw);
-              // console.debug(parsed);
-              if (!parsed) throw Error('wrong data format!');
-              const team_id = parsed["data"]["team_id"];
-              // const forms = document.getElementsByName("email-form");
-              // forms.forEach(e => {
-              //   console.debug(e);
-              //   emailjs.sendForm('service_3qvcxup', 'template_1', e, process.env.REACT_APP_EMAIL_API_KEY)
-              //     .then((result) => {
-              //       console.log(result.text);
-              //     }, (error) => {
-              //       console.log(error.text);
-              //     });
-              // });
-              setCookie("team_id", team_id, { path: "/", maxAge: 24 * 60 * 60 });
-            }).catch((reason) => {
-              console.error(reason);
-              setSubmitted(reason);
-            });
-          alert("submit success")
-          navigate("/Tinder");
-        }
+        // if (process.env.REACT_APP_EMAIL_API_KEY) {
+        //   const q = `select team_id from project.team where grouper_id=${cookies["user_id"]} and set_time=(select max(set_time) from project.team)`;
+        //   fetch(url
+        //     , {
+        //       method: "POST",
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //         "Accept": "application/json",
+        //       }, body: JSON.stringify({ type: "sql", query: q })
+        //       // ,
+        //       // signal: controller.signal
+        //     }).then((response) => {
+        //       if (response.status !== 200) throw Error('http failed!');
+        //       return response.text();
+        //     }).then((raw) => {
+        //       // console.debug(raw);
+        //       if (!raw) throw Error('no data!');
+        //       const parsed = JSON.parse(raw);
+        //       // console.debug(parsed);
+        //       if (!parsed) throw Error('wrong data format!');
+        //       const team_id = parsed["data"]["team_id"];
+        //       setCookie("team_id", team_id, { path: "/", maxAge: 24 * 60 * 60 });
+        //       // const forms = document.getElementsByName("email-form");
+        //       // forms.forEach(e => {
+        //       //   console.debug(e);
+        //       //   emailjs.sendForm('service_3qvcxup', 'template_1', e, process.env.REACT_APP_EMAIL_API_KEY)
+        //       //     .then((result) => {
+        //       //       console.log(result.text);
+        //       //     }, (error) => {
+        //       //       console.log(error.text);
+        //       //     });
+        //       // });
+        //       console.debug(parsed);
+        //     }).catch((reason) => {
+        //       console.error(reason);
+        //       setSubmitted(reason);
+        //     });
+        alert("submit success")
+        navigate("/Query");
+        // }
         setSubmitted(false)
 
       }

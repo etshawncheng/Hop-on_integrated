@@ -8,23 +8,41 @@ import SpotList from '../components/spotList';
 import url from '../url';
 import { useCookies } from 'react-cookie';
 
-function submitQuery(e, cookies, prefered_spot, unprefered_spot, setSubmitted) {
+function submitQuery(e, cookies, prefered_spot, unprefered_spot, setSubmitted, teamInfo) {
     e.preventDefault();
-    // console.debug(e.target);
-    // return;
-    const spot = [];
-    const team_id = cookies["team_id"];
+    const team_id = teamInfo["team_id"];
     const user_id = cookies["user_id"];
     let spot_per_day = document.getElementsByName("spot-amount")[0].value;
-    console.debug(spot_per_day)
-    const spot_type = [];
+    const spot_type = [...e.target].filter(x => (x.type === "checkbox" && x.checked)).map(x=>x.value).join(",");
+    console.debug(spot_type)
     const liked_spot_list = prefered_spot.map(x => x["attraction_id"]).join(",") + "/" + unprefered_spot.map(x => x["attraction_id"]).join();
-    console.debug(liked_spot_list)
-    const q = `INSERT INTO project.comprehensive_inquiry(team_id,user_id,spot_type,spot_per_day,liked_spot_list)VALUES(${team_id},${user_id},${spot_type},${spot_per_day},${liked_spot_list})`;
+    if (!spot_per_day) {
+        setSubmitted("請選擇平均一天要去的景點數");
+        return;
+    }
+    if (spot_type.length === 0) {
+        setSubmitted("請至少選擇一個偏好的景點類型");
+        return;
+    }
+    const q = `INSERT INTO project.comprehensive_inquiry(team_id,user_id,spot_type,spot_per_day,liked_spot_list)VALUES(${team_id},${user_id},"${spot_type}",${spot_per_day},"${liked_spot_list}")`;
     console.debug(q);
-    return;
-    // fetch
-    setSubmitted(true);
+    fetch(url
+        , {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            }, body: JSON.stringify({ type: "sql", query: q })
+            // ,
+            // signal: controller.signal
+        }
+    ).then((response) => {
+        if (response.status !== 200) throw Error('http failed!');
+        setSubmitted(true);
+    }).catch((reason) => {
+        console.error(reason);
+        setSubmitted(reason);
+    })
 }
 function SearchOptions(data) {
     return <option key={data["attraction_id"]} value={data["attraction_id"]}>{data["attraction_name"]}</option>
@@ -112,11 +130,44 @@ export function Queries() {
     const [cookies, setCookie, removeCookie] = useCookies(["cookie-name"])
     const navigate = useNavigate()
     const [submited, setSubmitted] = useState(false);
+    const [teamInfo, setTeamInfo] = useState(null)
 
     useEffect(() => {
+        if (teamInfo == null) {
+            const q = `select team_name,team_id from project.team where grouper_id=${cookies["user_id"]} and set_time=(select max(set_time) from project.team)`;
+            fetch(url
+                , {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    }, body: JSON.stringify({ type: "sql", query: q })
+                    // ,
+                    // signal: controller.signal
+                }).then((response) => {
+                    if (response.status !== 200) throw Error('http failed!');
+                    return response.text();
+                }).then((raw) => {
+                    // console.debug(raw);
+                    if (!raw) throw Error('no data!');
+                    const parsed = JSON.parse(raw);
+                    console.debug(parsed);
+                    if (!parsed) throw Error('wrong data format!');
+                    const team_info = parsed["data"][0];
+                    setTeamInfo(team_info);
+                }).catch((reason) => {
+                    console.error(reason);
+                    setSubmitted(reason);
+                });
+        }
         if (submited) {
-            alert("submit success");
-            navigate("/Tinder");
+            if (submited === true) {
+                alert("submit success");
+                navigate("/Tinder");
+            } else {
+                alert(submited);
+                setSubmitted(false)
+            }
         }
     }, [searchKey, searchResults, prefered, preferedList, unpreferedList, submited])
     return (
@@ -124,11 +175,11 @@ export function Queries() {
             padding: "1rem 0", width: "80%", alignItems: "center", margin: "auto"
         }}>
             {TopNav("Query")}
-            
-            <form onSubmit={(e) => { submitQuery(e, cookies, preferedList, unpreferedList, setSubmitted) }}>
+
+            <form onSubmit={(e) => { submitQuery(e, cookies, preferedList, unpreferedList, setSubmitted, teamInfo) }}>
+                <p>{teamInfo ? teamInfo["team_name"] : null}</p>
                 <p>偏好的旅遊類型？(可複選)</p>
                 <div className="input-group mb-3">
-
                     <div className='form-control border-white'>
                         <div className="row">
                             {['山林', '戶外', '室內', '飲食', '海', '在地體驗', '攝影', '動物', '歷史', '運動', '親子'].map(x =>
