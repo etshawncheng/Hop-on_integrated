@@ -16,7 +16,8 @@ def verify(name: str, sex: int, birthDate: str, email: str, account: str, passwo
     r = None
     with conn.cursor() as cursor:
         sql = "INSERT INTO project.user_info(user_name,user_sex,user_birth_date,user_email,user_account,user_password,user_sign_time)VALUES(%s,%s,%s,%s,%s,%s,now())"
-        r = cursor.execute(sql, (name, sex, birthDate, email, account, sha256.hexdigest()))
+        r = cursor.execute(sql, (name, sex, birthDate, email, account, sha256.digest()))
+    conn.commit()
     conn.close()
     return r
 

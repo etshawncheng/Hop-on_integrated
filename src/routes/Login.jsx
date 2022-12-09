@@ -49,7 +49,7 @@ export function Login() {
   }, [id]);
   return (
     <main style={{ padding: "1rem 0" }}>
-      <div className="vh-100 d-flex justify-content-center align-items-center ">
+      <div className="d-flex justify-content-center align-items-center ">
         <div className="col-md-5 p-5 shadow-sm border rounded-5 border-primary bg-white">
           <h2 className="text-center mb-4 text-primary">Login Form</h2>
           <form onSubmit={e => submit(e, setId)}>

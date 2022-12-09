@@ -7,8 +7,7 @@ function submit(e, setSubmitted) {
   e.preventDefault();
   const name = document.getElementById("name").value;
   
-  const sex = [...document.getElementsByName("sex")].filter(x=>x.checked);
-  
+  const sex = [...document.getElementsByName("sex")].filter(x=>x.checked)[0].value;
   const birthDate = document.getElementById("birth-date").value;
   const email = document.getElementById("email").value;
   const account = document.getElementById("account").value;
@@ -26,7 +25,7 @@ function submit(e, setSubmitted) {
     setSubmitted("passwords not en")
     return
   }
-  const q = ["insert_account.py", name, parseInt(sex[0].value), birthDate, email, account, password1]
+  const q = ["insert_account.py", name, parseInt(sex), birthDate, email, account, password1]
   console.debug(q);
   // return;
   fetch(url
