@@ -5,7 +5,8 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
-import { Votes, Teamup, Home, Views, Queries, Member, Schedule, Tinder, Login } from './routes/index';
+import { Votes, Teamup, Home, Views, Queries, Tinder, Login } from './routes/index';
+import Member from './containers/MemberContainer';
 import rootReducer from "./reducers";
 import RouteUI from "./containers/RouteUIContainer"
 import { configureStore } from '@reduxjs/toolkit';

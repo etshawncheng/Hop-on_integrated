@@ -4,11 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { removeView} from "../reducers/routePlanSlice";
+import { removeView } from "../reducers/routePlanSlice";
 import { toggleShow, updateIdList } from '../reducers/searchFieldSlice';
 import { useDispatch } from 'react-redux';
 
-export default function View({ id, viewId, name, listId }) {
+export default function View({ id, viewId, name, listId, curVerIndex, editPermissions }) {
     const [isOver, setIsOver] = useState(false);
     const dispatch = useDispatch();
     const targetRef = useRef(null);
@@ -19,13 +19,17 @@ export default function View({ id, viewId, name, listId }) {
         marginTop: "10px",
         transform: CSS.Translate.toString(transform),
         transition,
-        fontSize:'24px',
-        fontFamily:'微軟正黑體',
-        color:'white'
+        fontSize: '24px',
+        fontFamily: '微軟正黑體',
+        color: 'white'
     }
 
-    function handleClickDelete(){
-        dispatch(removeView({listId, viewId}));
+    function handleClickDelete() {
+        if (editPermissions) {
+            dispatch(removeView({ curVerIndex, listId, viewId }));
+        } else {
+            alert('沒有修改權限')
+        }
     }
 
     function handleOnOver() {
@@ -37,8 +41,12 @@ export default function View({ id, viewId, name, listId }) {
     }
     //edit 按鈕功能
     function handleClickEdit() {
-        dispatch(toggleShow(true));
-        dispatch(updateIdList({ listId, viewId }));
+        if (editPermissions) {
+            dispatch(toggleShow(true));
+            dispatch(updateIdList({ curVerIndex, listId, viewId }));
+        } else {
+            alert('沒有修改權限')
+        }
     }
 
     return (
@@ -51,14 +59,14 @@ export default function View({ id, viewId, name, listId }) {
                 onMouseLeave={handleOnLeave}
                 ref={targetRef}
             >
-                {letter + '.  '+ name}
+                {letter + '.  ' + name}
                 {isOver && (
                     <Button className="edit-button m-1" size="sm" onClick={handleClickEdit}>
                         <FontAwesomeIcon icon={faPencilAlt} />
                     </Button>)}
                 {isOver && (
                     <Button className="delete-button m-1" size="sm" onClick={handleClickDelete}>
-                        <FontAwesomeIcon icon={faTrash} style={{color:"#FF5C11",}}/>
+                        <FontAwesomeIcon icon={faTrash} style={{ color: "#FF5C11", }} />
                     </Button>
                 )}
             </div>

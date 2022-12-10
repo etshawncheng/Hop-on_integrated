@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initalState = {
+    curVerIndex: 0,
     listId:null,
     viewId:null,
     show:false,
@@ -20,7 +21,8 @@ const searchFieldSlice = createSlice({
             state.foundAttractions = foundAttractions;
         },
         updateIdList(state, action){
-            const {listId, viewId} = action.payload;
+            const {curVerIndex, listId, viewId} = action.payload;
+            state.curVerIndex= curVerIndex;
             state.listId = listId;
             state.viewId = viewId;
         }
