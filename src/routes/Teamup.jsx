@@ -8,16 +8,6 @@ import url from '../url';
 import emailjs from 'emailjs-com';
 import Alert from 'react-bootstrap/Alert';
 
-function emailForm(email) {
-  return (
-    <form id="test">
-      <input type="hidden" name="to_email" value={email} />
-      <input type="hidden" name="to_name" value={""} />
-      <input type="hidden" name="to_reply" value={""} />
-      <input type="hidden" name="message" value={""} />
-    </form>
-  )
-}
 function addGuest(e, guestList, setGuestList) {
   const L = guestList.map(x => x);
   L.push("");
@@ -34,15 +24,15 @@ function Guest(value, i, guestList, setGuestList) {
           setGuestList(L);
         }}
       />
-      <input type="hidden" name="to_name" value={""} />
-      <input type="hidden" name="to_reply" value={""} />
-      <input type="hidden" name="message" value={""} />
+      <input type="hidden" name="to_name" value={"1"} />
+      <input type="hidden" name="to_reply" value={"1"} />
+      <input type="hidden" name="message" value={"1"} />
       <button type="button" className='btn btn-primary' onClick={e => {
         guestList.length !== 1 ? setGuestList(guestList.splice(i, 1)) : setGuestList([])
       }}>remove</button>
     </form>)
 }
-function submit(e, cookies) {
+function submit(e, cookies, setSubmitted) {
   e.preventDefault();
   // console.debug(e.target);
   // return;
@@ -51,7 +41,7 @@ function submit(e, cookies) {
   let start_date = null;
   let period = null;
   let people_count = 0;
-  const join_url = `concat(last_insert_id(),${grouper_id})`;
+  const join_url = `concat(last_insert_id()+1,"c",${grouper_id})`;
   for (let i = 0; i < e.target.length; i++) {
     switch (e.target[i].type) {
       case "checkbox": {
@@ -67,10 +57,8 @@ function submit(e, cookies) {
           period = (new Date(e.target[i].value) - new Date(start_date)) / (1000 * 60 * 60 * 24);
           if (period < 1) {
 
-            // alert("not valid start date or end date!")
-            return (<Alert variant="success">
-              <Alert.Heading>not valid start date or end date!</Alert.Heading>
-            </Alert>);
+            setSubmitted("not valid start date or end date!")
+            return
           }
         }
         break;
@@ -87,24 +75,29 @@ function submit(e, cookies) {
   }
   const region_list = region.join(" ");
   if (!region_list) {
-    alert("must select at least one region!");
+    setSubmitted("must select at least one region!");
     return;
   }
   const q = `INSERT INTO project.team(region_list,start_date,period,people_count,join_url,set_time,grouper_id,teammate_list)VALUES("${region_list}","${start_date}",${period},${people_count},${join_url},now(),${grouper_id},"[]")`;
   console.debug(q);
-  const forms = document.getElementsByName("email-form");
-  forms.forEach(e =>
-    // emailjs.sendForm('service_3qvcxup', 'template_1', e, process.env.REACT_APP_EMAIL_API_KEY)
-    //   .then((result) => {
-    //     console.log(result.text);
-    //   }, (error) => {
-    //     console.log(error.text);
-    //   })
-    console.debug(e)
-  );
-  alert("title", "繳交成功")
+  setSubmitted(true);
   return;
-  // fetch
+  fetch(url
+    , {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      }, body: JSON.stringify({ type: "sql", query: q })
+      // ,
+      // signal: controller.signal
+    }).then((response) => {
+      if (response.status !== 200) throw Error('http failed!');
+      setSubmitted(true);
+    }).catch((reason) => {
+      console.error(reason);
+      setSubmitted(reason);
+    });
 }
 export function Teamup() {
   const [regions, setRegions] = useState(null);
@@ -118,8 +111,59 @@ export function Teamup() {
   const [alerted, setAlerted] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const [submited, setSubmitted] = useState(false);
   useEffect(() => {
-    // const controller = new AbortController();
+    console.debug("eff")
+    if (submited) {
+      if (submited === true) {
+        // if (process.env.REACT_APP_EMAIL_API_KEY) {
+        //   const q = `select team_id from project.team where grouper_id=${cookies["user_id"]} and set_time=(select max(set_time) from project.team)`;
+        //   fetch(url
+        //     , {
+        //       method: "POST",
+        //       headers: {
+        //         "Content-Type": "application/json",
+        //         "Accept": "application/json",
+        //       }, body: JSON.stringify({ type: "sql", query: q })
+        //       // ,
+        //       // signal: controller.signal
+        //     }).then((response) => {
+        //       if (response.status !== 200) throw Error('http failed!');
+        //       return response.text();
+        //     }).then((raw) => {
+        //       // console.debug(raw);
+        //       if (!raw) throw Error('no data!');
+        //       const parsed = JSON.parse(raw);
+        //       // console.debug(parsed);
+        //       if (!parsed) throw Error('wrong data format!');
+        //       const team_id = parsed["data"]["team_id"];
+        //       setCookie("team_id", team_id, { path: "/", maxAge: 24 * 60 * 60 });
+        //       // const forms = document.getElementsByName("email-form");
+        //       // forms.forEach(e => {
+        //       //   console.debug(e);
+        //       //   emailjs.sendForm('service_3qvcxup', 'template_1', e, process.env.REACT_APP_EMAIL_API_KEY)
+        //       //     .then((result) => {
+        //       //       console.log(result.text);
+        //       //     }, (error) => {
+        //       //       console.log(error.text);
+        //       //     });
+        //       // });
+        //       console.debug(parsed);
+        //     }).catch((reason) => {
+        //       console.error(reason);
+        //       setSubmitted(reason);
+        //     });
+        alert("submit success")
+        navigate("/Query");
+        // }
+        setSubmitted(false)
+
+      }
+      else {
+        alert(submited)
+        setSubmitted(false)
+      }
+    }
     if (loading === false & regions === null) {
       setLoading(true);
       console.debug('fetching');
@@ -154,7 +198,7 @@ export function Teamup() {
     // return () => {
     //     controller.abort();
     // }
-  }, [loading, regions, err, start, end, guestList]);
+  }, [loading, regions, err, start, end, guestList, submited]);
   return (
     <main style={{ padding: "1rem 0" }}>
       {TopNav("Team up")}
@@ -164,7 +208,7 @@ export function Teamup() {
         </video>
         <center>
           <div className="content">
-            <form onSubmit={e => { console.debug("submit?"); submit(e, cookies) }}>
+            <form onSubmit={e => { console.debug("submit?"); submit(e, cookies, setSubmitted) }}>
               <div className="mb-3">
                 <h1 className="form-label">Choose destination (city)</h1>
                 <div>
@@ -212,12 +256,6 @@ export function Teamup() {
                   <input className="btn btn-primary" type="submit" />
                 </div>
               </div>
-            </form>
-            <form id="contact-form">
-              <input type="hidden" name="to_email" value={"108306068@g.nccu.edu.tw"} />
-              <input type="hidden" name="to_name" value={""} />
-              <input type="hidden" name="to_reply" value={""} />
-              <input type="hidden" name="message" value={""} />
             </form>
           </div>
         </center>

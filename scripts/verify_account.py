@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import sys
 import pymysql
@@ -17,26 +18,17 @@ def verify(account: str, password: str) -> str:
         sql = "Select user_id, user_password from USER_info where user_email=%s or user_account=%s"
         cursor.execute(sql, (account, account))
         result = cursor.fetchone()
-        # b = struct.pack((f"{len(password)*'c'}{64-len(password)}x",) + tuple(j for j in bytearray(int(i) for i in password)))
-        # print(b)
-        # if b==result["user_password"]:
         if result:
-            id = str(result["user_id"])
+            sha256 = hashlib.sha256()
+            sha256.update(password.encode("ascii"))
+            v = sha256.digest()
+            if v+(64-len(v))*b"\x00" == result["user_password"]:
+                id = result["user_id"]
     conn.close()
     return id
 
 
 if __name__ == "__main__":
-    # file_path = __file__[:__file__.rfind("\\")]
-    # log_path = os.path.join(
-    #     file_path, "log", ".log")
-    # if not os.path.exists(log_path[:__file__.rfind("\\")]):
-    #     sys.stdout.write("building directory: log\n")
-    #     os.makedirs(log_path[:__file__.rfind("\\")])
-    # logging.basicConfig(level=logging.DEBUG,
-    #                     format='%(asctime)s|%(name)-12s|%(relativeCreated)d|%(levelname)-8s|%(message)s',
-    #                     datefmt='%y-%m-%d %H:%M:%S',
-    #                     filename=log_path)
     result = verify(*sys.argv[1:])
-    sys.stdout.write(result)
-    # logging.debug(result)
+    # result = verify("test1@hop-on.com", "12345678")
+    sys.stdout.write(str(result))
