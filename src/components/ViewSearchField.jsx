@@ -11,6 +11,7 @@ import url from '../url';
 export default function ViewSerachFields({ searchFieldSettings }) {
     const [showResults, setShowResults] = useState(true);
     const dispatch = useDispatch();
+    const [formValue, setFormValue] = useState('');
 
 
     function groupArray(array, subGroupLength) {
@@ -24,9 +25,15 @@ export default function ViewSerachFields({ searchFieldSettings }) {
         return newArray;
     }
 
+    function handleOnChange(e){
+        setFormValue(e.target.value);
+        getAttraction(e.target.value);
+    }
+
     function handleUpdateView(foundAttraction) {
         dispatch(updateView(
             {
+                curVerIndex:searchFieldSettings.curVerIndex,
                 listId: searchFieldSettings.listId,
                 viewId: searchFieldSettings.viewId,
                 updatedView: {
@@ -69,7 +76,7 @@ export default function ViewSerachFields({ searchFieldSettings }) {
     }
 
     useEffect(() => {
-        // document.getElementById("searchForm").reset();
+        setFormValue('');
         dispatch(updateFoundAttractions({ foundAttractions: null }));
     },[searchFieldSettings.viewId])
 
@@ -122,9 +129,8 @@ export default function ViewSerachFields({ searchFieldSettings }) {
                     <Form id="searchForm" style={{ position: 'relative', float: 'left', width: '30%', height: '100%' }}>
                         <Form.Control
                             // style={}
-                            onChange={(e) => {
-                                getAttraction(e.target.value)
-                            }}
+                            value={formValue}
+                            onChange={handleOnChange}
                         />
                     </Form>
                     <Button style={{ position: 'relative' }} onClick={() => { setShowResults(!showResults) }} >
