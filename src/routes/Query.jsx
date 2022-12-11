@@ -134,7 +134,7 @@ export function Queries() {
 
     useEffect(() => {
         if (teamInfo == null) {
-            const q = `select team_name,team_id from project.team where grouper_id=${cookies["user_id"]} and set_time=(select max(set_time) from project.team)`;
+            const q = `select team_name,team_id from project.team where grouper_id=${cookies["user_id"]} and set_time=(select max(set_time) from project.team where grouper_id=${cookies["user_id"]})`;
             fetch(url
                 , {
                     method: "POST",

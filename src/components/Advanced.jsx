@@ -1,6 +1,55 @@
-import React, { useState, useMemo, useRef } from 'react'
+import React, { useState, useMemo, useRef, createRef, useEffect } from 'react'
 import TinderCard from 'react-tinder-card'
-import  '../routes/Tinder.css'
+import '../routes/Tinder.css'
+import url from '../url';
+function submit(record) {
+  fetch(url
+        , {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          }, body: JSON.stringify({ type: "python", query: ["recommend.py", record.join(",")] })
+          // ,
+          // signal: controller.signal
+        }
+      ).then((response) => {
+        if (response.status !== 200) throw Error('http failed!');
+        return response.text();
+      }).then((raw) => {
+        // console.debug(raw);
+        if (!raw) throw Error('no data!');
+        const parsed = JSON.parse(raw);
+        // console.debug(parsed);
+        if (!parsed) throw Error('wrong data format!');
+        console.debug(parsed["data"])
+      }).catch((reason) => {
+        console.error(reason);
+      }).finally(() => {
+      });
+}
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height
+  };
+}
+
+function useWindowDimensions() {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowDimensions;
+}
 const db = [
   {
     name: '七星潭 - 花蓮',
@@ -24,17 +73,18 @@ const db = [
   }
 ]
 
-function Advanced () {
+function Advanced() {
+  const { height, width } = useWindowDimensions();
+  const [data, setData] = useState();
+  // const [curStat, setCurStat] = useState({ curID: db.length - 1, curWay: null })
+  const [record, setRecord] = useState([])
   const [currentIndex, setCurrentIndex] = useState(db.length - 1)
   const [lastDirection, setLastDirection] = useState()
   // used for outOfFrame closure
   const currentIndexRef = useRef(currentIndex)
 
-  const childRefs = useMemo(
-    () =>
-      Array(db.length)
-        .fill(0)
-        .map((i) => React.createRef()),
+  const childRefs = useMemo(() =>
+    Array(db.length).fill(0).map((i) => createRef()),
     []
   )
 
@@ -49,33 +99,67 @@ function Advanced () {
 
   // set last direction and decrease current index
   const swiped = (direction, nameToDelete, index) => {
-    setLastDirection(direction)
-    updateCurrentIndex(index - 1)
+    if (direction === "left" || direction === "right") {
+      const r = record.map(x => x)
+      r.push(direction === "left" ? -1 : 1)
+      setLastDirection(direction)
+      updateCurrentIndex(index - 1)
+      setRecord(r)
+      console.debug(direction, index);
+    }
   }
 
-  const outOfFrame = (name, idx) => {
-    console.log(`${name} (${idx}) left the screen!`, currentIndexRef.current)
-    // handle the case in which go back is pressed before card goes outOfFrame
-    currentIndexRef.current >= idx && childRefs[idx].current.restoreCard()
-    // TODO: when quickly swipe and restore multiple times the same card,
-    // it happens multiple outOfFrame events are queued and the card disappear
-    // during latest swipes. Only the last outOfFrame event should be considered valid
-  }
+  // const outOfFrame = (name, idx) => {
+  //   console.log(`${name} (${idx}) left the screen!`, currentIndexRef.current, lastDirection);
+  //   // handle the case in which go back is pressed before card goes outOfFrame
+  //   currentIndexRef.current >= idx && childRefs[idx].current.restoreCard();
+  //   // TODO: when quickly swipe and restore multiple times the same card,
+  //   // it happens multiple outOfFrame events are queued and the card disappear
+  //   // during latest swipes. Only the last outOfFrame event should be considered valid
+  // }
 
   const swipe = async (dir) => {
     if (canSwipe && currentIndex < db.length) {
-      await childRefs[currentIndex].current.swipe(dir) // Swipe the card!
+      await childRefs[currentIndex].current.swipe(dir); // Swipe the card!
     }
-  }
+  };
 
   // increase current index and show card
   const goBack = async () => {
     if (!canGoBack) return
-    const newIndex = currentIndex + 1
-    updateCurrentIndex(newIndex)
-    await childRefs[newIndex].current.restoreCard()
-  }
-
+    const r = record.map(x => x);
+    const newIndex = currentIndex + 1;
+    r.pop();
+    setRecord(r);
+    updateCurrentIndex(newIndex);
+    await childRefs[newIndex].current.restoreCard();
+  };
+  // useEffect(()=>{
+  //   const q = `select * from project.attraction`;
+  //   fetch(url
+  //     , {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "Accept": "application/json",
+  //       }, body: JSON.stringify({ type: "sql", query: q })
+  //       // ,
+  //       // signal: controller.signal
+  //     }
+  //   ).then((response) => {
+  //     if (response.status !== 200) throw Error('http failed!');
+  //     return response.text();
+  //   }).then((raw) => {
+  //     // console.debug(raw);
+  //     if (!raw) throw Error('no data!');
+  //     const parsed = JSON.parse(raw);
+  //     // console.debug(parsed);
+  //     if (!parsed) throw Error('wrong data format!');
+  //   }).catch((reason) => {
+  //     console.error(reason);
+  //   }).finally(() => {
+  //   });
+  // },[data])
   return (
     <div>
       <link
@@ -93,8 +177,18 @@ function Advanced () {
             ref={childRefs[index]}
             className='swipe'
             key={character.name}
-            onSwipe={(dir) => swiped(dir, character.name, index)}
-            onCardLeftScreen={() => outOfFrame(character.name, index)}
+            flickOnSwipe={true}
+            onSwipe={(dir) => {
+              swiped(dir, character.name, index);
+            }}
+            preventSwipe={["up", "down"]}
+            swipeRequirementType={"position"}
+            swipeThreshold={~~(width / 10)}
+          // onCardLeftScreen={() => outOfFrame(character.name, index)}
+          // onSwipeRequirementFulfilled={(dir) => {
+          //   if (dir === "right" || dir === "left") { swiped(dir, character.name, index) }
+          //   else { ; }
+          // }}
           >
             <div
               style={{ backgroundImage: 'url(' + character.url + ')' }}
@@ -109,6 +203,9 @@ function Advanced () {
         <button style={{ backgroundColor: !canSwipe && '#c3c4d3' }} onClick={() => swipe('left')}>Dislike</button>
         <button style={{ backgroundColor: !canGoBack && '#c3c4d3' }} onClick={() => goBack()}>Undo</button>
         <button style={{ backgroundColor: !canSwipe && '#c3c4d3' }} onClick={() => swipe('right')}>Like</button>
+      </div>
+      <div className='buttons'>
+        {(db.length == record.length) ? <button style={{ backgroundColor: !canGoBack && '#c3c4d3' }} onClick={() => submit(record)}>print</button> : null}
       </div>
       {/* {lastDirection ? (
         <h2 key={lastDirection} className='infoText'>

@@ -14,7 +14,7 @@ export default function Member({ history }) {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [cookies, setCookie] = useCookies();
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   function getHistory() {
     fetch(url
@@ -40,36 +40,39 @@ export default function Member({ history }) {
       const x = parsed["data"].map(route => route.team_id);
       const teamIdArray = x.filter((item, pos) => x.indexOf(item) == pos);
       console.debug(teamIdArray);
-      fetch(url
-        , {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-          }, body: JSON.stringify({ type: "sql", query: `select * from project.team where ${teamIdArray.flat().map(x => "team_id=" + x).join(" or ")}` })
-          // ,
-          // signal: controller.signal
-        }
-      ).then((response) => {
-        if (response.status !== 200) throw Error('http failed!');
-        return response.text();
-      }).then((raw) => {
-        // console.debug(raw);
-        if (!raw) throw Error('no data!');
-        let parsed = JSON.parse(raw);
-        // console.debug(parsed);
-        if (!parsed) throw Error('wrong data format!');
-        console.debug(parsed["data"])
-        const history = parsed["data"].map(x => ({ teamId: x.team_id, setTime: x.set_time }))
-        dispatch(init({ init: history }));
-      }).catch((reason) => {
-        console.error(reason);
-      }).finally(() => {
-      });
+      if (teamIdArray.length>0) {
+        fetch(url
+          , {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            }, body: JSON.stringify({ type: "sql", query: `select * from project.team where ${teamIdArray.flat().map(x => "team_id=" + x).join(" or ")}` })
+            // ,
+            // signal: controller.signal
+          }
+        ).then((response) => {
+          if (response.status !== 200) throw Error('http failed!');
+          return response.text();
+        }).then((raw) => {
+          // console.debug(raw);
+          if (!raw) throw Error('no data!');
+          let parsed = JSON.parse(raw);
+          // console.debug(parsed);
+          if (!parsed) throw Error('wrong data format!');
+          console.debug(parsed["data"])
+          const history = parsed["data"].map(x => ({ teamId: x.team_id, setTime: x.set_time }))
+          dispatch(init({ init: history }));
+        }).catch((reason) => {
+          console.error(reason);
+        }).finally(() => {
+        });
+      }
     }).catch((reason) => {
       console.error(reason);
     }).finally(() => {
     });
+
   }
 
   function getRoute(teamId) {
@@ -152,7 +155,7 @@ export default function Member({ history }) {
   }
 
   function handleClick(teamId) {
-    setCookie("team_id", teamId, {path:"/", maxAge:24*60*60});
+    setCookie("team_id", teamId, { path: "/", maxAge: 24 * 60 * 60 });
     navigate("/Schedule");
   }
 
@@ -161,7 +164,7 @@ export default function Member({ history }) {
       console.debug('getHIs')
       getHistory();
       console.debug(history)
-    }else{
+    } else {
       console.debug('y')
     }
   }, [history])
@@ -170,7 +173,8 @@ export default function Member({ history }) {
   return (
 
     <div style={{ fontFamily: '微軟正黑體' }}>
-      <Image roundedCircle={true} src={userIcon} style={{ height: '100px', width: '100px' }} />
+      <Image onClick={() => { removeCookie("user_id"); navigate("/"); }} roundedCircle={true} src={userIcon} style={{ height: '100px', width: '100px' }} />
+      {/* <button onClick={}></button> */}
       <div style={{ height: '50%', width: '80%', backgroundColor: '#ACACAC', display: 'flex', justifyContent: 'center', alignItem: 'center', padding: '5% 5% 5% 5%', margin: 'auto' }}>
         {history.teams.map((x, index) =>
           <Card style={{ width: '18rem' }} key={index}>
@@ -179,7 +183,7 @@ export default function Member({ history }) {
               <Card.Text style={{ width: '100%' }}>
                 <div>{"哈哈這次去哪玩呀!"}</div>
               </Card.Text>
-              <Button variant="primary" onClick={(e) => {handleClick(x.teamId)}}>打開行程</Button>
+              <Button variant="primary" onClick={(e) => { handleClick(x.teamId) }}>打開行程</Button>
             </Card.Body>
           </Card>
         )}

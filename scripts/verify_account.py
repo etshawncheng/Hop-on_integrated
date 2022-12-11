@@ -15,8 +15,8 @@ def verify(account: str, password: str) -> str:
         conn = pymysql.Connection(**config)
     id = '-1'
     with conn.cursor() as cursor:
-        sql = "Select user_id, user_password from USER_info where user_email=%s or user_account=%s"
-        cursor.execute(sql, (account, account))
+        sql = "select user_id, user_password from USER_info where user_email=%s"
+        cursor.execute(sql, (account,))
         result = cursor.fetchone()
         # if result:
         #     sha256 = hashlib.sha256()
@@ -30,5 +30,4 @@ def verify(account: str, password: str) -> str:
 
 if __name__ == "__main__":
     result = verify(*sys.argv[1:])
-    # result = verify("test1@hop-on.com", "12345678")
     sys.stdout.write(str(result))
