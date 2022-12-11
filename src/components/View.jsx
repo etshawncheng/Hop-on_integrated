@@ -8,7 +8,7 @@ import { removeView } from "../reducers/routePlanSlice";
 import { toggleShow, updateIdList } from '../reducers/searchFieldSlice';
 import { useDispatch } from 'react-redux';
 
-export default function View({ id, viewId, name, listId, curVerIndex, editPermissions }) {
+export default function View({ id, viewId, name, listId, curVerIndex }) {
     const [isOver, setIsOver] = useState(false);
     const dispatch = useDispatch();
     const targetRef = useRef(null);
@@ -25,11 +25,7 @@ export default function View({ id, viewId, name, listId, curVerIndex, editPermis
     }
 
     function handleClickDelete() {
-        if (editPermissions) {
-            dispatch(removeView({ curVerIndex, listId, viewId }));
-        } else {
-            alert('沒有修改權限')
-        }
+        dispatch(removeView({ curVerIndex, listId, viewId }));
     }
 
     function handleOnOver() {
@@ -41,12 +37,8 @@ export default function View({ id, viewId, name, listId, curVerIndex, editPermis
     }
     //edit 按鈕功能
     function handleClickEdit() {
-        if (editPermissions) {
-            dispatch(toggleShow(true));
-            dispatch(updateIdList({ curVerIndex, listId, viewId }));
-        } else {
-            alert('沒有修改權限')
-        }
+        dispatch(toggleShow(true));
+        dispatch(updateIdList({ curVerIndex, listId, viewId }));
     }
 
     return (

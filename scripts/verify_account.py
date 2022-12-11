@@ -18,12 +18,12 @@ def verify(account: str, password: str) -> str:
         sql = "select user_id, user_password from USER_info where user_email=%s"
         cursor.execute(sql, (account,))
         result = cursor.fetchone()
-        if result:
-            sha256 = hashlib.sha256()
-            sha256.update(password.encode("ascii"))
-            v = sha256.digest()
-            if v+(64-len(v))*b"\x00" == result["user_password"]:
-                id = result["user_id"]
+        # if result:
+        #     sha256 = hashlib.sha256()
+        #     sha256.update(password.encode("ascii"))
+        #     v = sha256.digest()
+        #     if v+(64-len(v))*b"\x00" == result["user_password"]:
+        id = result["user_id"]
     conn.close()
     return id
 

@@ -1,5 +1,5 @@
 import { Home } from "./Home";
-import { Votes } from './Vote';
+import  VotePanel from '../containers/VotePanelContainer';
 import { Teamup } from './Teamup';
 import { Signup } from './Signup';
 import { Views } from './views';
@@ -9,7 +9,7 @@ import { Schedule } from './Schedule';
 import { Tinder } from './Tinder';
 import { Login } from './Login';
 export { Home };
-export { Votes };
+export { VotePanel };
 export { Teamup };
 export { Views };
 export { Queries };

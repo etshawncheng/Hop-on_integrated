@@ -1,4 +1,4 @@
-import Vote from '../components/vote';
+import Vote from '../components/Vote';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './Query.css';

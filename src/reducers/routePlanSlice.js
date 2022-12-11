@@ -113,9 +113,12 @@ const routePlanSlice = createSlice({
     // },
     updateVersion(state, action) {
       const { version, userId, editCount} = action.payload;
-      const checkExists = state.versions.map(x => { return x.userId == userId && x.editCount == editCount ? true : false }) 
+      const checkExists = state.versions.map(x => { return x.userId == userId ? true : false }) 
       if (checkExists.includes(true)){
-        console.log('有了');
+        const index = checkExists.indexOf(true);
+        if(state.versions[index].editCount < editCount){
+          state.versions[index] = version;
+        }
       }
       else{
         state.versions.push(version)

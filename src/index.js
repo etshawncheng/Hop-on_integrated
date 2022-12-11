@@ -5,7 +5,8 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
-import { Votes, Teamup, Home, Views, Queries, Tinder, Login, Schedule,  Signup  } from './routes/index';
+import {Teamup, Home, Views, Queries, Tinder, Login,  Signup  } from './routes/index';
+import VotePanel from './containers/VotePanelContainer';
 import Member from './containers/MemberContainer';
 import rootReducer from "./reducers";
 import RouteUI from "./containers/RouteUIContainer"
@@ -23,7 +24,7 @@ root.render(
         <Route path="/" element={<Login />} />
         <Route path="Home" element={<Home />} />
         <Route path="Teamup" element={<Teamup />} />
-        <Route path="Vote" element={<Votes />} />
+        <Route path="Vote" element={<VotePanel />} />
         <Route path="Query" element={<Queries />} />
         <Route path="View" element={<Views />} />
         <Route path="Schedule" element={<RouteUI />} />
