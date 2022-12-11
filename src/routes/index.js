@@ -4,7 +4,7 @@ import { Teamup } from './Teamup';
 import { Signup } from './Signup';
 import { Views } from './views';
 import { Queries } from './Query';
-import { Member } from '../containers/MemberContainer';
+import  Member  from '../containers/MemberContainer';
 import { Schedule } from './Schedule';
 import { Tinder } from './Tinder';
 import { Login } from './Login';

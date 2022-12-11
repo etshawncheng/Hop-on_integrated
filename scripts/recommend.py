@@ -37,7 +37,4 @@ def verify(team_id) -> str:
 
 if __name__ == "__main__":
     result = verify(*sys.argv[1:])
-    result = verify(["1", "2", "3"])
-    # for i in range(1,len(result)):
-    #     print(result[i-1]==result[i])
     sys.stdout.write(str(result))
