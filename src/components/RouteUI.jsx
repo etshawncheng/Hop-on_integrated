@@ -16,7 +16,6 @@ export default function RouteUI({ routePlan }) {
   const [curVerIndex, setCurVerIndex] = useState(0);
   const [index, setIndex] = useState(0);
   const [newOrNot, setNewOrNot] = useState(0)
-  const [editPermissions, setEditPermissions] = useState(false)
   const [routeChanged, setRouteChanged] = useState(false);
   const [final, setFinal] = useState(true);
 
@@ -111,8 +110,7 @@ export default function RouteUI({ routePlan }) {
       const userId = routePlan.versions[curVerIndex].userId
       console.debug("userId: " + userId)
       setNewOrNot(!checkExists() && userId === 0)
-      setEditPermissions(cookies.user_id == userId || newOrNot)
-      console.log(editPermissions)
+      // setEditPermissions(cookies.user_id == userId || newOrNot)
     }
   }, [routePlan, index, curVerIndex])
 
@@ -157,6 +155,30 @@ export default function RouteUI({ routePlan }) {
     });
   };
 
+  function checkStat(){
+    fetch(url
+      , {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        }, body: JSON.stringify({ type: "python", query: ["checkTeamStat.py", cookies.team_id] })
+        // ,
+        // signal: controller.signal
+      }).then((response) => {
+        if (response.status !== 200) throw Error('http failed!');
+        return response.text();
+      }).then((raw) => {
+        if (!raw) throw Error('no data!');
+        const parsed = JSON.parse(raw);
+        if (!parsed) throw Error('wrong data format!');
+        console.debug(parsed["data"]);
+      }).catch((reason) => {
+        console.error(reason);
+      }).finally(() => {
+      });
+  }
+
   if (routePlan.versions.length !== 0) {
     return (
       <span className='fullSpan' style={{ fontFamily: '微軟正黑體', height: '100%', weight: '100%' }}>
@@ -194,10 +216,10 @@ export default function RouteUI({ routePlan }) {
                         curVerIndex={curVerIndex}
                         list={list}
                         listId={index}
-                        editPermissions={editPermissions}
                       />
                     </Row>
                     <div style={{ position: "relative", left: '25%' }}>
+                      <Button onClick={(e) => checkStat()}>Check Stat</Button>
                       {routeChanged ? <Button onClick={(e) => { handleSubmit() }} >提交修改後路線</Button> : console.log("noChange")}
                     </div>
                   </Container>

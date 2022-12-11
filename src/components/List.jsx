@@ -14,7 +14,7 @@ import { toggleShow, updateIdList } from '../reducers/searchFieldSlice';
 import { useEffect } from 'react';
 
 
-export default function List({ title, curVerIndex, list, listId, mapSetting, editPermissions }) {
+export default function List({ title, curVerIndex, list, listId, mapSetting }) {
     const dispatch = useDispatch();
     const sensors = useSensors(useSensor(PointerSensor, {
         activationConstraint: {
@@ -38,12 +38,8 @@ export default function List({ title, curVerIndex, list, listId, mapSetting, edi
 
     //切換NewTodo
     function toggleShowNew(e) {
-        if (editPermissions) {
-            dispatch(toggleShow(true));
-            dispatch(updateIdList({ curVerIndex, listId, viewId: null }));
-        } else {
-            alert('沒有修改權限')
-        }
+        dispatch(toggleShow(true));
+        dispatch(updateIdList({ curVerIndex, listId, viewId: null }));
     }
     //導航頁面
     const [showRoute, updateShowRoute] = useState(false);
@@ -52,16 +48,12 @@ export default function List({ title, curVerIndex, list, listId, mapSetting, edi
 
     //drag完的操作
     function drageEndEvent(props) {
-        if (editPermissions) {
-            const { active, over } = props
-            const activeIndex = list.views.indexOf(active.id)
-            const overIndex = list.views.indexOf(over.id)
-            // toggleRouteStatus(listId)
-            const updatedViews = arrayMove(list.views, activeIndex, overIndex)
-            dispatch(exchangeViewsOrder({ curVerIndex, listId, updatedViews }));
-        } else {
-            alert('沒有修改權限')
-        }
+        const { active, over } = props
+        const activeIndex = list.views.indexOf(active.id)
+        const overIndex = list.views.indexOf(over.id)
+        // toggleRouteStatus(listId)
+        const updatedViews = arrayMove(list.views, activeIndex, overIndex)
+        dispatch(exchangeViewsOrder({ curVerIndex, listId, updatedViews }));
     }
 
     return (
@@ -71,7 +63,7 @@ export default function List({ title, curVerIndex, list, listId, mapSetting, edi
             <DndContext onDragEnd={drageEndEvent} sensors={sensors} collisionDetection={closestCenter} >
                 <SortableContext items={list.views}>
                     {list.views.map((view, index) => (
-                        <View id={view} key={index} name={view.attraction_name} curVerIndex={curVerIndex} listId={listId} viewId={index} editPermissions={editPermissions} />
+                        <View id={view} key={index} name={view.attraction_name} curVerIndex={curVerIndex} listId={listId} viewId={index}/>
                     )
                     )}
                 </SortableContext>
