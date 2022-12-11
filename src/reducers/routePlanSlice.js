@@ -52,16 +52,17 @@ let t = [
       },
     ],
   }]
-let serverData = [{
-  id: 0,
-  final: true,
-  routeChanged: false,
-  route: null
-},
-{
-
-}
-];
+let serverData = {
+  versions: [
+    // {
+    //   userId: 0,
+    //   editCount:0,
+    //   final: true,
+    //   routeChanged: false,
+    //   route: null
+    // },
+  ]
+};
 
 
 
@@ -78,37 +79,48 @@ const routePlanSlice = createSlice({
   reducers: {
     //新增景點
     addView(state, action) {
-      const { listId, newView } = action.payload;
-      state[0].route[listId].views.push(newView);
-      state[0].routeChanged = true;
+      const { curVerIndex, listId, newView } = action.payload;
+      state.versions[curVerIndex].route[listId].views.push(newView);
+      state.versions[curVerIndex].routeChanged = true;
     },
     //更新景點
     updateView(state, action) {
-      const { listId, viewId, updatedView } = action.payload;
+      const { curVerIndex, listId, viewId, updatedView } = action.payload;
       if (viewId !== null) {
-        state[0].route[listId].views.splice(viewId, 1, updatedView);
-        state[0].routeChanged = true;
+        state.versions[curVerIndex].route[listId].views.splice(viewId, 1, updatedView);
+        state.versions[curVerIndex].routeChanged = true;
       }
       else {
-        state[0].route[listId].views.push(updatedView);
-        state[0].routeChanged = true;
+        state.versions[curVerIndex].route[listId].views.push(updatedView);
+        state.versions[curVerIndex].routeChanged = true;
       }
     },
     //刪除景點
     removeView(state, action) {
-      const { listId, viewId } = action.payload;
-      state[0].route[listId].views.splice(viewId, 1);
-      state[0].routeChanged = true;
+      const { curVerIndex, listId, viewId } = action.payload;
+      state.versions[curVerIndex].route[listId].views.splice(viewId, 1);
+      state.versions[curVerIndex].routeChanged = true;
     },
     //交換景點順序
     exchangeViewsOrder(state, action) {
-      const { listId, updatedViews } = action.payload;
-      state[0].route[listId].views = updatedViews;
-      state[0].routeChanged = true;
+      const { curVerIndex, listId, updatedViews } = action.payload;
+      state.versions[curVerIndex].route[listId].views = updatedViews;
+      state.versions[curVerIndex].routeChanged = true;
     },
-    setRoute(state, action) {
-      const { route } = action.payload;
-      state[0].route = route;
+    // setRoute(state, action) {
+    //   const { route } = action.payload;
+    //   state[0].route = route;
+    // },
+    updateVersion(state, action) {
+      const { version, userId, editCount} = action.payload;
+      const checkExists = state.versions.map(x => { return x.userId == userId && x.editCount == editCount ? true : false }) 
+      if (checkExists.includes(true)){
+        console.log('有了');
+      }
+      else{
+        state.versions.push(version)
+        console.log('成功加進去了')
+      }
     }
     //更新導航資料
     // updateResponse(state, action){
@@ -123,7 +135,7 @@ const routePlanSlice = createSlice({
   },
 });
 
-export const { addView, updateView, removeView, exchangeViewsOrder, updateResponse, updateResponseStatus, getState, setRoute } = routePlanSlice.actions;
+export const { addView, updateView, removeView, exchangeViewsOrder, updateResponse, updateResponseStatus, getState, setRoute, updateVersion} = routePlanSlice.actions;
 
 export function formMapPlan(views) {
   const origin = views[0].attraction_pluscode;
