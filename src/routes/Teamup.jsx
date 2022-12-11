@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import url from '../url';
 import emailjs from 'emailjs-com';
-import Alert from 'react-bootstrap/Alert';
 
 function addGuest(e, guestList, setGuestList) {
   const L = guestList.map(x => x);
@@ -15,24 +14,20 @@ function addGuest(e, guestList, setGuestList) {
   setGuestList(L);
 }
 function Guest(value, i, guestList, setGuestList) {
-  return (
-    <form name="email-form">
-      <input type="email" name="to_email" placeholder='email:' value={value}
-        onChange={e => {
-          const L = guestList.map(x => x);
-          L[i] = e.target.value;
-          setGuestList(L);
-        }}
-      />
-      <input type="hidden" name="to_name" value={"1"} />
-      <input type="hidden" name="to_reply" value={"1"} />
-      <input type="hidden" name="message" value={"1"} />
-      <button type="button" className='btn btn-primary' onClick={e => {
-        guestList.length !== 1 ? setGuestList(guestList.splice(i, 1)) : setGuestList([])
-      }}>remove</button>
-    </form>)
+  return (<>
+    <input type="email" name="to_email" placeholder='電子郵件' value={value}
+      onChange={e => {
+        const L = guestList.map(x => x);
+        L[i] = e.target.value;
+        setGuestList(L);
+      }}
+    />
+    <button type="button" className='btn btn-primary' onClick={e => {
+      guestList.length !== 1 ? setGuestList(guestList.splice(i, 1)) : setGuestList([])
+    }}>移除</button>
+  </>)
 }
-function submit(e, cookies, setSubmitted) {
+function submit(e, cookies, setSubmitted, guestList) {
   e.preventDefault();
   // console.debug(e.target);
   // return;
@@ -40,7 +35,7 @@ function submit(e, cookies, setSubmitted) {
   const grouper_id = cookies["user_id"];
   let start_date = null;
   let period = null;
-  let people_count = 0;
+  let people_count = guestList.length;
   const join_url = `concat(last_insert_id()+1,"c",${grouper_id})`;
   for (let i = 0; i < e.target.length; i++) {
     switch (e.target[i].type) {
@@ -56,15 +51,10 @@ function submit(e, cookies, setSubmitted) {
         } else if (e.target[i].id === "end") {
           period = (new Date(e.target[i].value) - new Date(start_date)) / (1000 * 60 * 60 * 24);
           if (period < 1) {
-
             setSubmitted("not valid start date or end date!")
             return
           }
         }
-        break;
-      }
-      case "email": {
-        people_count += 1;
         break;
       }
       default: {
@@ -79,9 +69,8 @@ function submit(e, cookies, setSubmitted) {
     return;
   }
   const q = `INSERT INTO project.team(region_list,start_date,period,people_count,join_url,set_time,grouper_id,teammate_list)VALUES("${region_list}","${start_date}",${period},${people_count},${join_url},now(),${grouper_id},"[]")`;
-  console.debug(q);
-  setSubmitted(true);
-  return;
+  // console.debug(q);
+  // setSubmitted(true); return;
   fetch(url
     , {
       method: "POST",
@@ -116,48 +105,47 @@ export function Teamup() {
     console.debug("eff")
     if (submited) {
       if (submited === true) {
-        // if (process.env.REACT_APP_EMAIL_API_KEY) {
-        //   const q = `select team_id from project.team where grouper_id=${cookies["user_id"]} and set_time=(select max(set_time) from project.team)`;
-        //   fetch(url
-        //     , {
-        //       method: "POST",
-        //       headers: {
-        //         "Content-Type": "application/json",
-        //         "Accept": "application/json",
-        //       }, body: JSON.stringify({ type: "sql", query: q })
-        //       // ,
-        //       // signal: controller.signal
-        //     }).then((response) => {
-        //       if (response.status !== 200) throw Error('http failed!');
-        //       return response.text();
-        //     }).then((raw) => {
-        //       // console.debug(raw);
-        //       if (!raw) throw Error('no data!');
-        //       const parsed = JSON.parse(raw);
-        //       // console.debug(parsed);
-        //       if (!parsed) throw Error('wrong data format!');
-        //       const team_id = parsed["data"]["team_id"];
-        //       setCookie("team_id", team_id, { path: "/", maxAge: 24 * 60 * 60 });
-        //       // const forms = document.getElementsByName("email-form");
-        //       // forms.forEach(e => {
-        //       //   console.debug(e);
-        //       //   emailjs.sendForm('service_3qvcxup', 'template_1', e, process.env.REACT_APP_EMAIL_API_KEY)
-        //       //     .then((result) => {
-        //       //       console.log(result.text);
-        //       //     }, (error) => {
-        //       //       console.log(error.text);
-        //       //     });
-        //       // });
-        //       console.debug(parsed);
-        //     }).catch((reason) => {
-        //       console.error(reason);
-        //       setSubmitted(reason);
-        //     });
-        alert("submit success")
-        navigate("/Query");
-        // }
+        if (process.env.REACT_APP_EMAIL_API_KEY) {
+          const q = `select team_id from project.team where grouper_id=${cookies["user_id"]} and set_time=(select max(set_time) from project.team where grouper_id=${cookies["user_id"]})`;
+          fetch(url
+            , {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+              }, body: JSON.stringify({ type: "sql", query: q })
+              // ,
+              // signal: controller.signal
+            }).then((response) => {
+              if (response.status !== 200) throw Error('http failed!');
+              return response.text();
+            }).then((raw) => {
+              // console.debug(raw);
+              if (!raw) throw Error('no data!');
+              const parsed = JSON.parse(raw);
+              // console.debug(parsed);
+              if (!parsed) throw Error('wrong data format!');
+              const team_id = parsed["data"][0]["team_id"];
+              console.debug(team_id)
+              setCookie("team_id", team_id, { path: "/", maxAge: 24 * 60 * 60 });
+              }).catch((reason) => {
+              console.error(reason);
+            });
+          if (cookies["team_id"]) {
+            guestList.forEach(e => {
+              const join_url = cookies["team_id"] + "c" + cookies["user_id"];
+              emailjs.send('service_3qvcxup', 'template_1', { to_email: e, join_url: join_url }, process.env.REACT_APP_EMAIL_API_KEY)
+                .then((result) => {
+                  console.debug(result.text);
+                }, (error) => {
+                  console.error(error.text);
+                });
+            });
+          }
+          navigate("/Query");
+          alert("submit success")
+        }
         setSubmitted(false)
-
       }
       else {
         alert(submited)
@@ -208,9 +196,9 @@ export function Teamup() {
         </video>
         <center>
           <div className="content">
-            <form onSubmit={e => { console.debug("submit?"); submit(e, cookies, setSubmitted) }}>
+            <form onSubmit={e => { console.debug("submit?"); submit(e, cookies, setSubmitted, guestList) }}>
               <div className="mb-3">
-                <h1 className="form-label">Choose destination (city)</h1>
+                <h1 className="form-label">選擇旅遊地(可複選)</h1>
                 <div>
                   {regions ? regions.map(x =>
                     <div>
@@ -218,7 +206,7 @@ export function Teamup() {
                     </div>) : null}
                 </div>
               </div>
-              <h1>Start date:</h1>
+              <h1>出發日</h1>
               <input type="date" id="start" name="trip-start" value={start}
                 onChange={e => {
                   const value = document.getElementById("start").value;
@@ -230,7 +218,7 @@ export function Teamup() {
                   // }
                 }}
               />
-              <h1>End date:</h1>
+              <h1>結束日</h1>
               <input type="date" id="end" name="trip-end" value={end}
                 onChange={e => {
                   const value = document.getElementById("end").value;
@@ -241,15 +229,12 @@ export function Teamup() {
                 }}
               />
               <div>
-                <h1>Number of guests :</h1>
+                <h1>旅伴數</h1>
                 <button type="button" className='btn btn-primary' value="add-tourmate"
                   onClick={e => {
                     addGuest(e, guestList, setGuestList);
-                  }}>add tourmate</button>
+                  }}>增加旅伴</button>
                 {guestList ? guestList.map((x, i) => Guest(x, i, guestList, setGuestList)) : null}
-              </div>
-              <h1>Are you ready?</h1>
-              <div>
               </div>
               <div>
                 <div className="mb-3">

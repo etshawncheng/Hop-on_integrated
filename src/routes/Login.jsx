@@ -38,9 +38,12 @@ export function Login() {
   const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
   useEffect(() => {
     console.debug(id);
+    if (cookies["user_id"] && cookies["user_id"] !== -1) {
+      navigate("/Member");
+    }
     if (id) {
-      if (id != -1) {
-        setCookie("user_id", id, {path:"/", maxAge:24*60*60});
+      if (id !== -1) {
+        setCookie("user_id", id, { path: "/", maxAge: 24 * 60 * 60 });
         navigate("/Member");
       } else {
         alert("wrong account or password!")
@@ -51,23 +54,24 @@ export function Login() {
     <main style={{ padding: "1rem 0" }}>
       <div className="d-flex justify-content-center align-items-center ">
         <div className="col-md-5 p-5 shadow-sm border rounded-5 border-primary bg-white">
-          <h2 className="text-center mb-4 text-primary">Login Form</h2>
+          <h2 className="text-center mb-4 text-primary">登錄</h2>
           <form onSubmit={e => submit(e, setId)}>
             <div className="mb-3">
-              <label className="form-label">Email address</label>
+              <label className="form-label">電子郵件</label>
               <input type="text" className="form-control border border-primary" id="account" aria-describedby="emailHelp"></input>
             </div>
             <div className="mb-3">
-              <label className="form-label">Password</label>
+              <label className="form-label">密碼</label>
               <input type="password" className="form-control border border-primary" id="password"></input>
             </div>
-            <p className="small"><a className="text-primary" href="forget-password.html">Forgot password?</a></p>
+            <p className="small"><a className="text-primary" href="forget-password.html">忘記密碼</a></p>
             <div className="d-grid">
-              <button className="btn btn-primary" type="submit">Login</button>
+              <button className="btn btn-primary" type="submit">登錄</button>
             </div>
           </form>
-          <div className="mt-3">
-            <p className="mb-0  text-center">Don't have an account? <a href="signup.html" className="text-primary fw-bold">Sign Up</a></p>
+          <div className="mt-3 col-flex">
+            <p className="mb-0  text-center">還沒註冊帳號嗎?</p>
+            <a href="\Signup" className="text-center fw-bold">註冊</a>
           </div>
         </div>
       </div>

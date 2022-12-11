@@ -3,11 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import url from '../url';
 
-function submit(e, setSubmitted) {
+function submit(e, setSubmitted, cookies, setCookie, removeCookie) {
   e.preventDefault();
   const name = document.getElementById("name").value;
-  
-  const sex = [...document.getElementsByName("sex")].filter(x=>x.checked)[0].value;
+
+  const sex = [...document.getElementsByName("sex")].filter(x => x.checked)[0].value;
   const birthDate = document.getElementById("birth-date").value;
   const email = document.getElementById("email").value;
   const account = document.getElementById("account").value;
@@ -25,7 +25,7 @@ function submit(e, setSubmitted) {
     setSubmitted("passwords not en")
     return
   }
-  const q = ["insert_account.py", name, parseInt(sex), birthDate, email, account, password1]
+  const q = ["insert_account.py", name, parseInt(sex), birthDate, email, account, password1, cookies["join_id"] ? cookies["join_id"] : "null"]
   console.debug(q);
   // return;
   fetch(url
@@ -40,6 +40,12 @@ function submit(e, setSubmitted) {
     }).then((response) => {
       if (response.status !== 200) throw Error('http failed!');
       return response.text();
+    }).then((raw) => {
+      if (!raw) throw Error('no data!');
+      const parsed = JSON.parse(raw);
+      if (!parsed) throw Error('wrong data format!');
+      console.debug(parsed["data"]);
+      setCookie("user_id", parseInt(parsed["data"]), { path: "/", maxAge: 24 * 60 * 60 });
     }).catch((reason) => setSubmitted(reason))
   setSubmitted(true)
 }
@@ -51,12 +57,17 @@ export function Signup() {
   useEffect(() => {
     if (submited) {
       if (submited === true) {
-        alert("submit success")
+        if(cookies["join_id"]) {
+          setCookie("team_id", cookies["join_id"]);
+          removeCookie("join_id");
+        }
+        alert("submit success");
+        navigate("/Member");
       }
-      // setCookie("user_id", id, { path: "/", maxAge: 24 * 60 * 60 });
-      // navigate("/Member");
-      alert(submited)
-      setSubmitted(false)
+      else {
+        alert(submited)
+        setSubmitted(false)
+      }
     }
 
   }, [submited]);
@@ -65,7 +76,7 @@ export function Signup() {
       <div className="d-flex justify-content-center align-items-center ">
         <div className="col-md-5 p-5 shadow-sm border rounded-5 border-primary bg-white">
           <h2 className="text-center mb-4 text-primary">會員註冊</h2>
-          <form onSubmit={e => submit(e, setSubmitted)}>
+          <form onSubmit={e => submit(e, setSubmitted, cookies, setCookie, removeCookie)}>
             <div className="mb-3">
               <label className="form-label">尊姓大名</label>
               <input type="text" className="form-control border border-primary" id="name"></input>

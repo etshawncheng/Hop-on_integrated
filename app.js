@@ -1,6 +1,6 @@
 var express = require('express');
 var path = require('path');
-// var cookieParser = require('cookie-parser');
+var cookieParser = require('cookie-parser');
 // var logger = require('morgan');
 var createError = require('http-errors');
 var api = require('./scripts/api');
@@ -14,10 +14,16 @@ var app = express();
 // app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
+app.use(cookieParser());
 app.use('/', api);
 app.use(express.static(path.join(__dirname, "build")));
-app.get("/*",(req, res, next) => {
+app.get("/join", (req, res, next) => {
+  const ids = req.query.joinUrl.split("c")
+  console.debug(ids)
+  res.cookie('join_id', ids[0], { path: "/Signup", maxAge: 60 * 60 });
+  res.redirect('/Signup');
+});
+app.get("/*", (req, res, next) => {
   // res.render(path.join(__dirname, "src", "index.js"));
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
