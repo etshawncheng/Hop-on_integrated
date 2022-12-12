@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {teams:[{
     teamId:null,
     setTime:null,
+    round:null
 }]};
 
 const historyRouteSlice = createSlice({

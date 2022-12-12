@@ -59,7 +59,8 @@ let serverData = {
     //   editCount:0,
     //   final: true,
     //   routeChanged: false,
-    //   route: null
+    //   route: null,
+    //   vote: null,
     // },
   ]
 };

@@ -2,28 +2,32 @@ import React, { useState, useMemo, useRef, createRef, useEffect } from 'react'
 import TinderCard from 'react-tinder-card'
 import '../routes/Tinder.css'
 import url from '../url';
-function submit(record) {
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+function submit(record,cookies) {
   fetch(url
         , {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-          }, body: JSON.stringify({ type: "python", query: ["recommend.py", record.join(",")] })
+          }, body: JSON.stringify({ type: "python", query: ["recommend.py", record.join(","), cookies["user_id"], cookies["team_id"]] })
           // ,
           // signal: controller.signal
         }
       ).then((response) => {
         if (response.status !== 200) throw Error('http failed!');
         return response.text();
-      }).then((raw) => {
+      })
+      .then((raw) => {
         // console.debug(raw);
         if (!raw) throw Error('no data!');
         const parsed = JSON.parse(raw);
         // console.debug(parsed);
         if (!parsed) throw Error('wrong data format!');
         console.debug(parsed["data"])
-      }).catch((reason) => {
+      })
+      .catch((reason) => {
         console.error(reason);
       }).finally(() => {
       });
@@ -38,7 +42,7 @@ function getWindowDimensions() {
 
 function useWindowDimensions() {
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-
+  
   useEffect(() => {
     function handleResize() {
       setWindowDimensions(getWindowDimensions());
@@ -76,13 +80,14 @@ const db = [
 function Advanced() {
   const { height, width } = useWindowDimensions();
   const [data, setData] = useState();
+  const navigate = useNavigate();
   // const [curStat, setCurStat] = useState({ curID: db.length - 1, curWay: null })
   const [record, setRecord] = useState([])
   const [currentIndex, setCurrentIndex] = useState(db.length - 1)
   const [lastDirection, setLastDirection] = useState()
   // used for outOfFrame closure
   const currentIndexRef = useRef(currentIndex)
-
+  const [cookies, setCookie, removeCookie]=useCookies()
   const childRefs = useMemo(() =>
     Array(db.length).fill(0).map((i) => createRef()),
     []
@@ -123,6 +128,8 @@ function Advanced() {
       await childRefs[currentIndex].current.swipe(dir); // Swipe the card!
     }
   };
+
+  
 
   // increase current index and show card
   const goBack = async () => {
@@ -205,8 +212,10 @@ function Advanced() {
         <button style={{ backgroundColor: !canSwipe && '#c3c4d3' }} onClick={() => swipe('right')}>Like</button>
       </div>
       <div className='buttons'>
-        {(db.length == record.length) ? <button style={{ backgroundColor: !canGoBack && '#c3c4d3' }} onClick={() => submit(record)}>print</button> : null}
+        {(db.length == record.length) ? <button style={{ backgroundColor: !canGoBack && '#c3c4d3' }} onClick={() => {submit(record, cookies);navigate("/Member");}}>submit</button> : null}
       </div>
+
+      
       {/* {lastDirection ? (
         <h2 key={lastDirection} className='infoText'>
           You swiped {lastDirection}
